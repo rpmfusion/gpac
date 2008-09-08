@@ -21,7 +21,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     0.4.%{cvs}cvs%{?dist}
+Release:     0.5.%{cvs}cvs%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -204,7 +204,7 @@ rm -rf doc/ipmpx_syntax.bt.origine
 %build
 %configure \
   --enable-debug \
-  --extra-cflags="$RPM_OPT_FLAGS" \
+  --extra-cflags="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1" \
   --libdir=%{_libdir} \
   --disable-oss-audio \
 %if %with_mozilla
@@ -366,8 +366,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Sun Aug 03 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 0.4.5-0.4.20080217cvs
-- rebuild
+* Mon Sep  8 2008 kwizart < kwizart at gmail.com > - 0.4.5-0.5.20080217cvs
+- Fix for Large File Support (was livna #2075 )
 
 * Mon Feb 25 2008 kwizart < kwizart at gmail.com > - 0.4.5-0.3.20080217cvs
 - Enable devel-static
