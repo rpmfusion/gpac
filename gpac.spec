@@ -21,7 +21,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     0.5.%{cvs}cvs%{?dist}
+Release:     0.6.%{cvs}cvs%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -366,6 +366,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 16 2008 kwizart < kwizart at gmail.com > - 0.4.5-0.6.20080217cvs
+- Fix BR on EL-5 (no openjpeg-devel yet)
+
 * Mon Sep  8 2008 kwizart < kwizart at gmail.com > - 0.4.5-0.5.20080217cvs
 - Fix for Large File Support (was livna #2075 )
 
