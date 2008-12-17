@@ -1,6 +1,6 @@
 diff -up gpac/applications/generators/SVG/Makefile.libxml2 gpac/applications/generators/SVG/Makefile
---- gpac/applications/generators/SVG/Makefile.libxml2	2008-02-17 19:12:02.000000000 +0100
-+++ gpac/applications/generators/SVG/Makefile	2008-02-17 19:12:41.000000000 +0100
+--- gpac/applications/generators/SVG/Makefile.libxml2	2008-12-17 12:59:23.000000000 +0100
++++ gpac/applications/generators/SVG/Makefile	2008-12-17 12:59:23.000000000 +0100
 @@ -37,7 +37,7 @@ SRCS := $(OBJS:.o=.c) 
  all: $(PROG)
  
@@ -11,19 +11,19 @@ diff -up gpac/applications/generators/SVG/Makefile.libxml2 gpac/applications/gen
  
  %.o: %.c
 diff -up gpac/configure.libxml2 gpac/configure
---- gpac/configure.libxml2	2008-02-17 19:13:07.000000000 +0100
-+++ gpac/configure	2008-02-17 20:09:09.000000000 +0100
-@@ -59,6 +59,7 @@ has_oss_audio="no"
- has_alsa="no"
+--- gpac/configure.libxml2	2008-12-17 12:59:23.000000000 +0100
++++ gpac/configure	2008-12-17 13:02:37.000000000 +0100
+@@ -68,6 +68,7 @@ has_alsa="no"
+ has_jack="no"
  has_x11="no"
  has_x11_shm="no"
 +has_libxml2="no"
+ has_x11_xv="no"
  disable_svg="no"
  no_gcc_opt="no"
- use_fixed_point="no"
-@@ -892,6 +893,15 @@ for opt do
-   esac
- done
+@@ -901,6 +902,15 @@ fi
+ fi
+ #end wx test
  
 +# If svg isn't disabled
 +if test "$disable_svg" != "yes"; then
@@ -35,17 +35,17 @@ diff -up gpac/configure.libxml2 gpac/configure
 +  fi
 +fi
  
- #look for X11 shared memory support
+ # look for IPv6
  cat > $TMPC << EOF
-@@ -1256,6 +1266,11 @@ echo "CONFIG_FFMPEG=$has_ffmpeg" >> conf
- echo "CONFIG_OSS_AUDIO=$has_oss_audio" >> config.mak
- echo "CONFIG_ALSA=$has_alsa" >> config.mak
+@@ -1579,6 +1589,11 @@ echo "CONFIG_JACK=$has_jack" >> config.m
+ echo "CONFIG_A52=$has_a52" >> config.mak
+ 
  echo "DISABLE_SVG=$disable_svg" >> config.mak
 +echo "HAS_LIBXML2=$has_libxml2" >> config.mak
 +if test "$has_libxml2" = "yes"; then
 +  echo "XML2_CFLAGS=$libxml2_cflags" >> config.mak
 +  echo "XML2_LIBS=$libxml2_lib_flags" >> config.mak
 +fi
- echo "HAS_OPENGL=$has_opengl" >> config.mak
- if test "$has_opengl" = "yes" ; then
-   echo "OGL_LIBS=$LINK3D" >> config.mak
+ echo "GPAC_USE_TINYGL=$has_tinygl" >> config.mak
+ echo "OGL_INCLS=$INCL3D" >> config.mak
+ if test "$disable_svg" = "yes" ; then
