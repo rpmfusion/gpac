@@ -19,7 +19,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -33,6 +33,7 @@ Patch3:      gpac-0.4.5-lib64.patch
 Patch4:      gpac-0.4.5-system_openjpeg.patch
 Patch6:      gpac-0.4.5-shared_sggen.patch
 Patch7:      gpac-0.4.5-libxml2.patch
+Patch8:      gpac-ppc64.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -150,6 +151,7 @@ web browsers.
 %patch4 -p1 -b .openjpeg
 %patch6 -p1 -b .shared
 %patch7 -p1 -b .libxml2
+%patch8 -p1 -b .ppc64
 
 ## kwizart - enable dynamic mode - hardcoded with patch2
 # define SONAME number from the first number of gpac version.
@@ -326,6 +328,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Dec 18 2008 kwizart < kwizart at gmail.com > - 0.4.5-2
+- Fix for ppc64
+
 * Wed Dec 17 2008 kwizart < kwizart at gmail.com > - 0.4.5-1
 - Update to 0.4.5 (final)
 - Drop upstreamed patches - Rewrite some
