@@ -274,6 +274,9 @@ for b in MPEG4 SVG X3D; do
   popd
 done
 
+#Fix doxygen timestamp
+touch -r Changelog doc/html/*
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -328,6 +331,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Dec 28 2008 kwizart < kwizart at gmail.com > - 0.4.5-3
+- Fix -devel doc timestamp which leads to multilib conflict 
+  ( RPM Fusion #270 )
+
 * Thu Dec 18 2008 kwizart < kwizart at gmail.com > - 0.4.5-2
 - Fix for ppc64
 
