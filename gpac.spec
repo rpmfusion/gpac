@@ -19,7 +19,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
