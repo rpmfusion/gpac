@@ -19,7 +19,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     3%{?dist}
+Release:     4%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -331,6 +331,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Feb 04 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 0.4.5-4
+- rebuild for new ssl
+
 * Sun Dec 28 2008 kwizart < kwizart at gmail.com > - 0.4.5-3
 - Fix -devel doc timestamp which leads to multilib conflict 
   ( RPM Fusion #270 )
