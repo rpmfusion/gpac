@@ -19,7 +19,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     4%{?dist}
+Release:     5%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -331,6 +331,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Feb 11 2009 kwizart < kwizart at gmail.com > - 0.4.5-5
+- Rebuild for openssl (#363) - Made possible because the
+  circle dependency with gpac/x264 was fixed first (#362)
+
 * Wed Feb 04 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 0.4.5-4
 - rebuild for new ssl
 
