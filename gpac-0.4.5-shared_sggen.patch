@@ -28,7 +28,7 @@ diff -up gpac/applications/generators/SVG/Makefile.shared gpac/applications/gene
  
  SVGGen$(EXE): $(OBJS) 
 -	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(XML2_LFLAGS) $(EXTRALIBS)
-+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(XML2_LFLAGS) $(EXTRALIBS)
++	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(XML2_LIBS) $(EXTRALIBS)
  
  
  %.o: %.c
