@@ -1,0 +1,112 @@
+diff -up gpac/configure.ffmpeg gpac/configure
+--- gpac/configure.ffmpeg	2009-03-20 21:46:41.000000000 +0100
++++ gpac/configure	2009-03-20 21:58:21.000000000 +0100
+@@ -737,10 +737,11 @@ fi
+ #look for FFMPEG support
+ cat > $TMPC << EOF
+ #include <stddef.h>
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ int main( void ) { return 0; }
+ EOF
+-
++ffmpeg_cflags=`pkg-config --cflags libavcodec libavformat libswscale`
++ffmpeg_lflags=`pkg-config --libs libavcodec libavformat libswscale`
+ if test "$cross_prefix"  != "" ; then
+   echo "HELLO"
+   echo "HELLO"
+@@ -756,7 +757,7 @@ if test "$cross_prefix"  != "" ; then
+      fi
+   fi
+ else
+-  if $cc -o $TMPO $TMPC -lz -lavcodec -lavformat 2> /dev/null  ; then
++  if $cc -o $TMPO $TMPC $ffmpeg_cflags $ffmpeg_lflags 2> /dev/null  ; then
+   has_ffmpeg="system"
+   elif test "$alt_macosx_dir" != "" ; then
+    if $cc -o $TMPO $TMPC -I$alt_macosx_dir/include -L$alt_macosx_dir/lib -lz -lavcodec -lavformat 2> /dev/null ; then
+@@ -1587,6 +1588,10 @@ echo "CONFIG_OGG=$has_ogg" >> config.mak
+ echo "CONFIG_VORBIS=$has_vorbis" >> config.mak
+ echo "CONFIG_THEORA=$has_theora" >> config.mak
+ echo "CONFIG_FFMPEG=$has_ffmpeg" >> config.mak
++if test "$has_ffmpeg" = "system"; then
++  echo "FFMPEG_CFLAGS=$ffmpeg_cflags" >> config.mak
++  echo "FFMPEG_LFLAGS=$ffmpeg_lflags" >> config.mak
++fi
+ echo "CONFIG_OSS_AUDIO=$has_oss_audio" >> config.mak
+ echo "CONFIG_ALSA=$has_alsa" >> config.mak
+ echo "CONFIG_JACK=$has_jack" >> config.mak
+diff -up gpac/modules/ffmpeg_in/ffmpeg_decode.c.ffmpeg gpac/modules/ffmpeg_in/ffmpeg_decode.c
+--- gpac/modules/ffmpeg_in/ffmpeg_decode.c.ffmpeg	2008-11-28 18:26:06.000000000 +0100
++++ gpac/modules/ffmpeg_in/ffmpeg_decode.c	2009-03-20 22:12:55.000000000 +0100
+@@ -241,7 +241,7 @@ static GF_Err FFDEC_AttachStream(GF_Base
+ 
+ 	/*setup audio streams*/
+ 	if (ffd->st==GF_STREAM_AUDIO) {
+-		if ((ffd->codec->type == CODEC_ID_MP3LAME) || (ffd->codec->type == CODEC_ID_MP2)) {
++		if ((ffd->codec->type == CODEC_ID_MP3) || (ffd->codec->type == CODEC_ID_MP2)) {
+ 			ffd->ctx->frame_size = (ffd->ctx->sample_rate > 24000) ? 1152 : 576;
+ 		}
+ 		/*may be 0 (cfg not known yet)*/
+@@ -444,9 +444,9 @@ static GF_Err FFDEC_ProcessData(GF_Media
+ 			return GF_OK;
+ 		}
+ 		if (ffd->frame_start>inBufferLength) ffd->frame_start = 0;
+-
++		gotpic=buf_size;
+ redecode:
+-		len = avcodec_decode_audio(ffd->ctx, (short *)ffd->audio_buf, &gotpic, inBuffer + ffd->frame_start, inBufferLength - ffd->frame_start);
++		len = avcodec_decode_audio2(ffd->ctx, (short *)ffd->audio_buf, &gotpic, inBuffer + ffd->frame_start, inBufferLength - ffd->frame_start);
+ 
+ 		if (len<0) { ffd->frame_start = 0; return GF_NON_COMPLIANT_BITSTREAM; }
+ 		if (gotpic<0) { ffd->frame_start = 0; return GF_OK; }
+@@ -643,7 +643,7 @@ redecode:
+         	                NULL, NULL, NULL);
+ 			
+ 			if (ffd->sws_ctx)
+-				sws_scale(ffd->sws_ctx, ffd->frame->data, ffd->frame->linesize, 0, ffd->ctx->height->codec->height, pict.data, pict.linesize);
++				sws_scale(ffd->sws_ctx, ffd->frame->data, ffd->frame->linesize, 0, ffd->ctx->height, pict.data, pict.linesize);
+ 
+ #endif
+ 
+diff -up gpac/modules/ffmpeg_in/ffmpeg_in.h.ffmpeg gpac/modules/ffmpeg_in/ffmpeg_in.h
+--- gpac/modules/ffmpeg_in/ffmpeg_in.h.ffmpeg	2008-10-20 13:04:40.000000000 +0200
++++ gpac/modules/ffmpeg_in/ffmpeg_in.h	2009-03-20 21:47:50.000000000 +0100
+@@ -56,14 +56,14 @@
+ 
+ 
+ /*include FFMPEG APIs*/
+-#include <ffmpeg/avformat.h>
++#include <libavformat/avformat.h>
+ 
+ void gf_av_vlog(void* avcl, int level, const char *fmt, va_list vl);
+ 
+ 
+ #if LIBAVCODEC_VERSION_INT > ((52<<16)+(0<<8)+0)
+ #define FFMPEG_SWSCALE
+-#include <ffmpeg/swscale.h>
++#include <libswscale/swscale.h>
+ #endif
+ 
+ /*FFMPEG decoder module */
+diff -up gpac/modules/ffmpeg_in/Makefile.ffmpeg gpac/modules/ffmpeg_in/Makefile
+--- gpac/modules/ffmpeg_in/Makefile.ffmpeg	2008-11-24 10:14:18.000000000 +0100
++++ gpac/modules/ffmpeg_in/Makefile	2009-03-20 21:46:41.000000000 +0100
+@@ -2,7 +2,7 @@ include ../../config.mak
+ 
+ vpath %.c $(SRC_PATH)/modules/ffmpeg_in
+ 
+-CFLAGS= $(OPTFLAGS) -I$(SRC_PATH)/include
++CFLAGS= $(OPTFLAGS) -I$(SRC_PATH)/include $(FFMPEG_CFLAGS)
+ 
+ ifeq ($(DEBUGBUILD), yes)
+ CFLAGS+=-g
+@@ -15,7 +15,7 @@ LDFLAGS+=-pg
+ endif
+ 
+ LOCAL_LIB=
+-LINKLIBS=-lgpac -lavcodec -lavformat -lz
++LINKLIBS=-lgpac $(FFMPEG_LFLAGS) -lz
+ 
+ #common obj
+ OBJS=ffmpeg_decode.o ffmpeg_demux.o ffmpeg_load.o
+

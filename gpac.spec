@@ -12,14 +12,14 @@
 %define with_osmo     0
 # Mozilla stuff fails. It's completely disabled for now.
 %define mozver        3.0
-%define geckover      1.9
-%define xuldir        %{_datadir}/idl/xulrunner-sdk-1.9pre
-%define xulbindir     %{_libdir}/xulrunner-%{geckover}pre
+%define geckover      1.9.1
+%define xuldir        %{_datadir}/idl/xulrunner-sdk-%{geckover}
+%define xulbindir     %{_libdir}/xulrunner-%{geckover}
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     5%{?dist}
+Release:     6%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -34,6 +34,7 @@ Patch4:      gpac-0.4.5-system_openjpeg.patch
 Patch6:      gpac-0.4.5-shared_sggen.patch
 Patch7:      gpac-0.4.5-libxml2.patch
 Patch8:      gpac-ppc64.patch
+Patch9:      gpac-0.4.5-ffmpeg.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -152,6 +153,7 @@ web browsers.
 %patch6 -p1 -b .shared
 %patch7 -p1 -b .libxml2
 %patch8 -p1 -b .ppc64
+%patch9 -p1 -b .ffmpeg
 
 ## kwizart - enable dynamic mode - hardcoded with patch2
 # define SONAME number from the first number of gpac version.
@@ -287,7 +289,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc AUTHORS BUGS Changelog COPYING README TODO 
 %{_bindir}/MP4*
 %{_bindir}/*Gen
@@ -295,14 +297,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*.1.*
 
 %files libs
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_libdir}/libgpac.so.*
 %{_libdir}/gpac/
 
 %if %{with_osmo}
 %files -n %{osmo}
+%defattr(-,root,root,-)
 %doc AUTHORS BUGS COPYING README TODO
-%defattr(-,root,root)
 %{_bindir}/Osmo4
 %{_datadir}/applications/*.desktop
 %{_datadir}/pixmaps/%{osmo}.xpm
@@ -310,27 +312,31 @@ rm -rf $RPM_BUILD_ROOT
 
 %{?_with_mozilla:
 %files -n mozilla-%{osmo}
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_libdir}/mozilla/plugins/nposmozilla.so
 %{_libdir}/mozilla/components/nposmozilla.xpt
 }
 
 %files devel
+%defattr(-,root,root,-)
 %doc doc/CODING_STYLE doc/ipmpx_syntax.bt
 %doc doc/html/*
-%defattr(-,root,root)
 %{_includedir}/gpac/
 %{_libdir}/libgpac.so
 
 %if %{with_static}
 %files devel-static
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_libdir}/libgpac_static.a
 %else
 %exclude %{_libdir}/libgpac_static.a
 %endif
 
 %changelog
+* Mon Mar 23 2009 kwizart < kwizart at gmail.com > - 0.4.5-6
+- Add ffmpeg patch by Rathann (RPM Fusion #454 )
+- Fix default defattr
+
 * Wed Feb 11 2009 kwizart < kwizart at gmail.com > - 0.4.5-5
 - Rebuild for openssl (#363) - Made possible because the
   circle dependency with gpac/x264 was fixed first (#362)
