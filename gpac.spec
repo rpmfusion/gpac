@@ -19,7 +19,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.5
-Release:     6%{?dist}
+Release:     7%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -333,6 +333,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Mar 27 2009 kwizart < kwizart at gmail.com > - 0.4.5-7
+- Rebuild for faad x264
+
 * Mon Mar 23 2009 kwizart < kwizart at gmail.com > - 0.4.5-6
 - Add ffmpeg patch by Rathann (RPM Fusion #454 )
 - Fix default defattr
