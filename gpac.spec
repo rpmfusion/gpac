@@ -6,35 +6,38 @@
 #        - Submit and import patches upstream.
 #        - Fix unused-direct-shlib-dependency on libgpac
 
-%define osmo          Osmo4
-#define cvs           20080217
-%define with_static   1
-%define with_osmo     0
+%global osmo          Osmo4
+%global cvs           20090919
+%global with_osmo     0
 # Mozilla stuff fails. It's completely disabled for now.
-%define mozver        3.0
-%define geckover      1.9.1
-%define xuldir        %{_datadir}/idl/xulrunner-sdk-%{geckover}
-%define xulbindir     %{_libdir}/xulrunner-%{geckover}
+%global mozver        3.0
+%global geckover      1.9.1
+%global xuldir        %{_datadir}/idl/xulrunner-sdk-%{geckover}
+%global xulbindir     %{_libdir}/xulrunner-%{geckover}
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.4.5
-Release:     7%{?dist}
+Version:     0.4.6
+Release:     0.1.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
 #Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
-Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{version}-repack.tar.bz2
+Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{cvs}.tar.bz2
 Source9:     gpac-snapshot.sh
-Patch0:      gpac-0.4.5-makefix.patch
+#https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853860&group_id=84101
+Patch0:      gpac-0.4.6-makefix.patch
 Patch1:      gpac-0.4.5-soname.patch
 Patch2:      gpac-0.4.5-amr.patch
 Patch3:      gpac-0.4.5-lib64.patch
 Patch4:      gpac-0.4.5-system_openjpeg.patch
+Patch5:      gpac-0.4.6-js_cflags.patch
 Patch6:      gpac-0.4.5-shared_sggen.patch
-Patch7:      gpac-0.4.5-libxml2.patch
-Patch8:      gpac-ppc64.patch
-Patch9:      gpac-0.4.5-ffmpeg.patch
+#https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853856&group_id=84101
+Patch7:      gpac-0.4.6-libxml2.patch
+#https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853857&group_id=84101
+Patch9:      gpac-0.4.6-ffmpeg.patch
+Patch10:     gpac-0.4.6-ogl_libs.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -50,6 +53,7 @@ BuildRequires:  libpng-devel >= 1.2.5
 BuildRequires:  libmad-devel
 BuildRequires:  xvidcore-devel >= 1.0.0
 BuildRequires:  ffmpeg-devel
+BuildRequires:  js-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
 BuildRequires:  openjpeg-devel
@@ -89,14 +93,11 @@ The %{name}-libs package contains library for %{name}.
 Summary:  Development libraries and files for %{name}
 Group:    Development/Libraries
 Requires: %{name}-libs = %{version}-%{release}
-%if %{with_static}
-%else
-%endif
 
 %description  devel
 Development libraries and files for gpac.
 
-%if %{with_static}
+
 %package  devel-static
 Summary:  Development libraries and files for %{name}
 Group:    Development/Libraries
@@ -105,7 +106,6 @@ Requires: %{name}-devel = %{version}-%{release}
 
 %description  devel-static
 Static library for gpac.
-%endif
 
 %if %{with_osmo}
 %package -n  %{osmo}
@@ -150,20 +150,16 @@ web browsers.
 %patch3 -p1 -b .lib64
 %endif
 %patch4 -p1 -b .openjpeg
+%patch5 -p1 -b .jscflags
 %patch6 -p1 -b .shared
 %patch7 -p1 -b .libxml2
-%patch8 -p1 -b .ppc64
 %patch9 -p1 -b .ffmpeg
+%patch10 -p1 -b .ogl_libs
 
 ## kwizart - enable dynamic mode - hardcoded with patch2
 # define SONAME number from the first number of gpac version.
 #define soname libgpac.so.0
 #sed -i.soname -e 's|EXTRALIBS+=$(GPAC_SH_FLAGS)|EXTRALIBS+=$(GPAC_SH_FLAGS)\nLDFLAGS+="-Wl,-soname,%{soname}"|' src/Makefile
-
-# Update doxygen
-pushd doc
-doxygen -u
-popd
 
 # Fix encoding warnings
 cp -p Changelog Changelog.origine
@@ -260,13 +256,13 @@ desktop-file-install --vendor "" \
 
 #icons
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps
-install -m 0644 applications/osmo4_wx/osmo4.xpm $RPM_BUILD_ROOT%{_datadir}/pixmaps/%{osmo}.xpm
+install -pm 0644 applications/osmo4_wx/osmo4.xpm $RPM_BUILD_ROOT%{_datadir}/pixmaps/%{osmo}.xpm
 %else
 rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
 %endif
 
 ## kwizart - rpmlint gpac no-ldconfig-symlink
-ln -sf  libgpac.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libgpac.so.0
+ln -sf  libgpac.so.%{version}-DEV $RPM_BUILD_ROOT%{_libdir}/libgpac.so.0
 ln -sf  libgpac.so.0 $RPM_BUILD_ROOT%{_libdir}/libgpac.so
 
 #Install generated sggen binaries
@@ -324,15 +320,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gpac/
 %{_libdir}/libgpac.so
 
-%if %{with_static}
 %files devel-static
 %defattr(-,root,root,-)
 %{_libdir}/libgpac_static.a
-%else
-%exclude %{_libdir}/libgpac_static.a
-%endif
+
 
 %changelog
+* Sat Sep 19 2009 kwizart < kwizart at gmail.com > - 0.4.6-0.1cvs20090919
+- Update to 0.4.6 pre cvs snapshoot 20090919
+- Fix OGL link flag
+
+* Tue Sep  1 2009 kwizart < kwizart at gmail.com > - 0.4.6-0.1cvs20090901
+- Update to 0.4.6 pre cvs snapshoot 20090901
+- Remove merged patch (1) update old (4)
+- Clean static conditional
+
 * Fri Mar 27 2009 kwizart < kwizart at gmail.com > - 0.4.5-7
 - Rebuild for faad x264
 

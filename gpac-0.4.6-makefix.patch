@@ -1,29 +1,7 @@
 diff -up gpac/Makefile.makefix gpac/Makefile
---- gpac/Makefile.makefix	2008-10-23 17:40:38.000000000 +0200
-+++ gpac/Makefile	2008-12-17 12:10:45.000000000 +0100
-@@ -53,9 +53,8 @@ install:
- 	install $(INSTFLAGS) -m 755 bin/gcc/MP4Box "$(DESTDIR)$(prefix)/bin"
- 	$(MAKE) -C applications install
- 	install -d "$(DESTDIR)$(moddir)"
--	install bin/gcc/*.$(DYN_LIB_SUFFIX) "$(DESTDIR)$(moddir)"
--	rm -f $(DESTDIR)$(moddir)/libgpac.$(DYN_LIB_SUFFIX)
--	rm -f $(DESTDIR)$(moddir)/nposmozilla.$(DYN_LIB_SUFFIX)
-+	install bin/gcc/gm*.$(DYN_LIB_SUFFIX) "$(DESTDIR)$(moddir)"
-+
- ifeq ($(CONFIG_WIN32),yes)
- 	install $(INSTFLAGS) -m 755 bin/gcc/libgpac.dll $(prefix)/$(libdir)
- else
-@@ -66,19 +65,18 @@ ifeq ($(CONFIG_DARWIN),yes)
- 	install -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac-$(VERSION).$(DYN_LIB_SUFFIX)
- 	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
- else
--	install $(INSTFLAGS) -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac-$(VERSION).$(DYN_LIB_SUFFIX)
--	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
--	ldconfig || true
-+	install $(INSTFLAGS) -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX).$(VERSION)
-+	ln -sf libgpac.$(DYN_LIB_SUFFIX).$(VERSION) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
- endif
- endif
+--- gpac/Makefile.makefix	2009-07-31 18:43:25.000000000 +0200
++++ gpac/Makefile	2009-09-01 17:14:20.615499921 +0200
+@@ -60,11 +60,11 @@ install:
  	install -d "$(DESTDIR)$(mandir)"
  	install -d "$(DESTDIR)$(mandir)/man1"
  	if [ -d  doc ] ; then \
@@ -39,7 +17,19 @@ diff -up gpac/Makefile.makefix gpac/Makefile
  	fi
  
  uninstall:
-@@ -94,17 +92,15 @@ uninstall:
+@@ -89,23 +89,25 @@ ifeq ($(CONFIG_DARWIN),yes)
+ 	install -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac-$(VERSION).$(DYN_LIB_SUFFIX)
+ 	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
+ else
+-	install $(INSTFLAGS) -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac-$(VERSION).$(DYN_LIB_SUFFIX)
+-	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
++	install $(INSTFLAGS) -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX).$(VERSION)
++	ln -sf libgpac.$(DYN_LIB_SUFFIX).$(VERSION) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
++ifeq ($(DESTDIR)$(prefix),$(prefix))
+ 	ldconfig || true
+ endif
+ endif
++endif
  
  install-lib:
  	mkdir -p "$(DESTDIR)$(prefix)/include/gpac"
@@ -50,14 +40,13 @@ diff -up gpac/Makefile.makefix gpac/Makefile
 +	install -pm 644 $(SRC_PATH)/include/gpac/internal/*.h "$(DESTDIR)$(prefix)/include/gpac/internal"
  	mkdir -p "$(DESTDIR)$(prefix)/include/gpac/modules"
 -	install -m 644 $(SRC_PATH)/include/gpac/modules/*.h "$(DESTDIR)$(prefix)/include/gpac/modules"
+-	install -m 644 $(SRC_PATH)/config.h "$(DESTDIR)$(prefix)/include/gpac/configuration.h"
 +	install -pm 644 $(SRC_PATH)/include/gpac/modules/*.h "$(DESTDIR)$(prefix)/include/gpac/modules"
++	install -pm 644 $(SRC_PATH)/config.h "$(DESTDIR)$(prefix)/include/gpac/configuration.h"
  ifeq ($(GPAC_ENST), yes)
  	mkdir -p "$(DESTDIR)$(prefix)/include/gpac/enst"
 -	install -m 644 $(SRC_PATH)/include/gpac/enst/*.h "$(DESTDIR)$(prefix)/include/gpac/enst"
 +	install -pm 644 $(SRC_PATH)/include/gpac/enst/*.h "$(DESTDIR)$(prefix)/include/gpac/enst"
  endif
--	mkdir -p "$(DESTDIR)$(prefix)/lib"
--	install -m 644 "./bin/gcc/libgpac_static.a" "$(DESTDIR)$(prefix)/lib"
  	mkdir -p "$(DESTDIR)$(prefix)/$(libdir)"
  	install -m 644 "./bin/gcc/libgpac_static.a" "$(DESTDIR)$(prefix)/$(libdir)"
- 

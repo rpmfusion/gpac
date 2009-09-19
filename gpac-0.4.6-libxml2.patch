@@ -1,0 +1,76 @@
+diff -up gpac/applications/generators/SVG/Makefile.libxml2 gpac/applications/generators/SVG/Makefile
+--- gpac/applications/generators/SVG/Makefile.libxml2	2009-09-01 16:12:48.317745990 +0200
++++ gpac/applications/generators/SVG/Makefile	2009-09-01 16:14:27.221497909 +0200
+@@ -37,7 +37,7 @@ SRCS := $(OBJS:.o=.c) 
+ all: $(PROG)
+ 
+ SVGGen$(EXE): $(OBJS) 
+-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(XML2_LFLAGS) $(EXTRALIBS)
++	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(XML2_LIBS) $(EXTRALIBS)
+ 
+ 
+ %.o: %.c
+diff -up gpac/applications/generators/SVG/Makefile.shared.libxml2 gpac/applications/generators/SVG/Makefile.shared
+--- gpac/applications/generators/SVG/Makefile.shared.libxml2	2008-11-24 09:40:04.000000000 +0100
++++ gpac/applications/generators/SVG/Makefile.shared	2009-09-01 16:20:46.049498877 +0200
+@@ -35,7 +35,7 @@ SRCS := $(OBJS:.o=.c) 
+ all: $(PROG)
+ 
+ SVGGen$(EXE): $(OBJS) 
+-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(XML2_LFLAGS) $(EXTRALIBS)
++	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(XML2_LIBS) $(EXTRALIBS)
+ 
+ 
+ %.o: %.c
+diff -up gpac/applications/testapps/loadcompare/Makefile.libxml2 gpac/applications/testapps/loadcompare/Makefile
+--- gpac/applications/testapps/loadcompare/Makefile.libxml2	2008-11-24 09:56:20.000000000 +0100
++++ gpac/applications/testapps/loadcompare/Makefile	2009-09-01 16:21:19.341500133 +0200
+@@ -29,7 +29,7 @@ else
+ EXT=
+ PROG=LoadCompare
+ #LINKFLAGS+=-lgpac_static $(EXTRALIBS) $(GPAC_SH_FLAGS) -lz
+-LINKFLAGS+=-lgpac -lz $(XML2_LFLAGS)
++LINKFLAGS+=-lgpac -lz $(XML2_LIBS)
+ endif
+ 
+ 
+diff -up gpac/configure.libxml2 gpac/configure
+--- gpac/configure.libxml2	2009-09-01 16:15:10.226496731 +0200
++++ gpac/configure	2009-09-01 16:18:23.287494600 +0200
+@@ -87,6 +87,7 @@ has_ipv6="no"
+ has_dvb4linux="no"
+ has_xmlrpc="no"
+ has_openjpeg="no"
++has_libxml2="no"
+ gprof_build="no"
+ PIC_CFLAGS=""
+ want_pic="no"
+@@ -980,6 +981,16 @@ fi
+ fi
+ #end wx test
+ 
++# If svg isn't disabled
++if test "$disable_svg" != "yes"; then
++# Then we check libxm2 presence via pkg-config
++  if pkg-config libxml-2.0 --exists > /dev/null 2>&1  ; then
++    libxml2_cflags=`pkg-config libxml-2.0 --cflags`
++    libxml2_lib_flags=`pkg-config libxml-2.0 --libs`
++    has_libxml2="yes"
++  fi
++fi
++
+ 
+ # look for IPv6
+ cat > $TMPC << EOF
+@@ -1908,6 +1919,11 @@ echo "CONFIG_JACK=$has_jack" >> config.m
+ echo "CONFIG_A52=$has_a52" >> config.mak
+ 
+ echo "DISABLE_SVG=$disable_svg" >> config.mak
++echo "HAS_LIBXML2=$has_libxml2" >> config.mak
++if test "$has_libxml2" = "yes"; then
++  echo "XML2_CFLAGS=$libxml2_cflags" >> config.mak
++  echo "XML2_LIBS=$libxml2_lib_flags" >> config.mak
++fi
+ echo "GPAC_USE_TINYGL=$has_tinygl" >> config.mak
+ echo "OGL_INCLS=$INCL3D" >> config.mak
+ 
