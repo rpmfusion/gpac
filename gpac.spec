@@ -18,7 +18,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.1.cvs%{?cvs}%{?dist}
+Release:     0.2.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -96,6 +96,14 @@ Requires: %{name}-libs = %{version}-%{release}
 
 %description  devel
 Development libraries and files for gpac.
+
+
+%package  doc
+Summary:  Documentation for %{name}
+Group:    Documentation
+
+%description  doc
+Documentation for %{name}.
 
 
 %package  devel-static
@@ -313,10 +321,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mozilla/components/nposmozilla.xpt
 }
 
+%files doc
+%defattr(-,root,root,-)
+%doc doc/html/*
+
 %files devel
 %defattr(-,root,root,-)
 %doc doc/CODING_STYLE doc/ipmpx_syntax.bt
-%doc doc/html/*
 %{_includedir}/gpac/
 %{_libdir}/libgpac.so
 
@@ -326,6 +337,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov  3 2009 kwizart < kwizart at gmail.com > - 0.4.6-0.2cvs20090919
+- Attempt to fix rfbz#270
+
 * Sat Sep 19 2009 kwizart < kwizart at gmail.com > - 0.4.6-0.1cvs20090919
 - Update to 0.4.6 pre cvs snapshoot 20090919
 - Fix OGL link flag
