@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global cvs           20090919
+%global cvs           20100116
 %global with_osmo     0
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
@@ -18,7 +18,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.2.cvs%{?cvs}%{?dist}
+Release:     0.3.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -32,9 +32,6 @@ Patch2:      gpac-0.4.5-amr.patch
 Patch3:      gpac-0.4.5-lib64.patch
 Patch4:      gpac-0.4.5-system_openjpeg.patch
 Patch5:      gpac-0.4.6-js_cflags.patch
-Patch6:      gpac-0.4.5-shared_sggen.patch
-#https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853856&group_id=84101
-Patch7:      gpac-0.4.6-libxml2.patch
 #https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853857&group_id=84101
 Patch9:      gpac-0.4.6-ffmpeg.patch
 Patch10:     gpac-0.4.6-ogl_libs.patch
@@ -159,8 +156,6 @@ web browsers.
 %endif
 %patch4 -p1 -b .openjpeg
 %patch5 -p1 -b .jscflags
-%patch6 -p1 -b .shared
-%patch7 -p1 -b .libxml2
 %patch9 -p1 -b .ffmpeg
 %patch10 -p1 -b .ogl_libs
 
@@ -337,6 +332,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jan 16 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.3cvs20100116
+- Update to 20100116
+- Removed upstreamed patch for system libxml2
+- Update ffmpeg patch
+
 * Tue Nov  3 2009 kwizart < kwizart at gmail.com > - 0.4.6-0.2cvs20090919
 - Attempt to fix rfbz#270
 

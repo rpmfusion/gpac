@@ -1,49 +1,43 @@
 diff -up gpac/configure.ffmpeg gpac/configure
---- gpac/configure.ffmpeg	2009-09-01 16:50:50.270496559 +0200
-+++ gpac/configure	2009-09-01 17:59:05.902493824 +0200
-@@ -808,25 +808,19 @@ cat > $TMPC << EOF
+--- gpac/configure.ffmpeg	2010-01-16 19:09:26.451865570 +0100
++++ gpac/configure	2010-01-16 19:19:49.604861370 +0100
+@@ -852,12 +852,21 @@ fi
+ 
+ #look for FFMPEG support
+ 
++if pkg-config --exists libavcodec libavformat libswscale 2> /dev/null  ; then
++  ffmpeg_cflags=`pkg-config --cflags libavcodec libavformat libswscale libavutil`
++  ffmpeg_lflags=`pkg-config --libs libavcodec libavformat libswscale libavutil`
++  has_ffmpeg="system"
++else
++  ffmpeg_cflags=``
++  ffmpeg_lflags=`-lz -lavcodec -lavformat`
++fi
++
+ cat > $TMPC << EOF
+ #include <libavcodec/avcodec.h>
  int main( void ) { return 0; }
  EOF
  
 -if $cc $TMPO -c $TMPC 2> /dev/null  ; then
--old_ffmpeg_inc="no"
-+if pkg-config --exists libavcodec libavformat libswscale 2> /dev/null  ; then
-+  ffmpeg_cflags=`pkg-config --cflags libavcodec libavformat libswscale`
-+  ffmpeg_lflags=`pkg-config --libs libavcodec libavformat libswscale`
-+  has_ffmpeg="system"
++if $cc $TMPO  $ffmpeg_cflags -c $TMPC 2> /dev/null  ; then
+ old_ffmpeg_inc="no"
  else
--
--old_ffmpeg_inc="yes"
--
--cat > $TMPC << EOF
--#include <ffmpeg/avcodec.h>
--int main( void ) { return 0; }
--EOF
--
--fi
--
-+  ffmpeg_cflags=
-+  ffmpeg_lflags=`-lavcodec -lavformat`
+ 
+@@ -872,10 +881,10 @@ fi
+ 
  
  if test "$cross_prefix"  != "" ; then
 -  if $cc -o $TMPO $TMPC -I$prefix/include -L$prefix/lib -lz -lavcodec -lavformat -lavutil 2> /dev/null  ; then
-+  if $cc -o $TMPO $TMPC -I$prefix/include -L$prefix/lib -lz $ffmpeg_lflags -lavutil 2> /dev/null  ; then
++  if $cc -o $TMPO $TMPC -I$prefix/include -L$prefix/lib $ffmpeg_cflags $ffmpeg_lflags 2> /dev/null  ; then
       has_ffmpeg="system"
    else
 -     if $cc -o $TMPO $TMPC -I$local_inc -L$local_lib -lz -lavcodec -lavformat 2> /dev/null  ; then
-+     if $cc -o $TMPO $TMPC -I$local_inc -L$local_lib -lz $ffmpeg_lflags 2> /dev/null  ; then
++     if $cc -o $TMPO $TMPC -I$local_inc -L$local_lib $ffmpeg_cflags $ffmpeg_lflags 2> /dev/null  ; then
          has_ffmpeg="local"
+         echo OK 
       fi
-   fi
-@@ -841,6 +835,7 @@ else
-   has_ffmpeg="local"
-   fi
- fi
-+fi
- 
- #look for vorbis support
- cat > $TMPC << EOF
-@@ -1912,6 +1907,10 @@ echo "CONFIG_VORBIS=$has_vorbis" >> conf
+@@ -1978,6 +1987,10 @@ echo "CONFIG_VORBIS=$has_vorbis" >> conf
  echo "CONFIG_THEORA=$has_theora" >> config.mak
  echo "CONFIG_FFMPEG=$has_ffmpeg" >> config.mak
  echo "CONFIG_FFMPEG_OLD=$old_ffmpeg_inc" >> config.mak
@@ -56,7 +50,7 @@ diff -up gpac/configure.ffmpeg gpac/configure
  echo "CONFIG_ALSA=$has_alsa" >> config.mak
 diff -up gpac/modules/ffmpeg_in/Makefile.ffmpeg gpac/modules/ffmpeg_in/Makefile
 --- gpac/modules/ffmpeg_in/Makefile.ffmpeg	2009-07-31 09:37:41.000000000 +0200
-+++ gpac/modules/ffmpeg_in/Makefile	2009-09-01 17:49:55.333497907 +0200
++++ gpac/modules/ffmpeg_in/Makefile	2010-01-16 19:09:26.460862249 +0100
 @@ -2,7 +2,7 @@ include ../../config.mak
  
  vpath %.c $(SRC_PATH)/modules/ffmpeg_in
@@ -71,7 +65,7 @@ diff -up gpac/modules/ffmpeg_in/Makefile.ffmpeg gpac/modules/ffmpeg_in/Makefile
  
  LOCAL_LIB=
 -LINKLIBS=-lgpac -lavcodec -lavformat -lz
-+LINKLIBS=-lgpac $(FFMPEG_LFLAGS) -lz
++LINKLIBS=-lgpac -lz $(FFMPEG_LFLAGS)
  
  #old ffmpeg lib
  ifeq ($(CONFIG_FFMPEG_OLD), yes)
