@@ -18,7 +18,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.2.cvs%{?cvs}%{?dist}
+Release:     0.3.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -282,6 +282,7 @@ done
 
 #Fix doxygen timestamp
 touch -r Changelog doc/html/*
+touch -r Changelog $RPM_BUILD_ROOT%{_incluedir}/gpac/configuration.h
 
 
 %clean
@@ -337,6 +338,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb 27 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.3cvs20090919
+- New Attempt to fix rfbz#270
+
 * Tue Nov  3 2009 kwizart < kwizart at gmail.com > - 0.4.6-0.2cvs20090919
 - Attempt to fix rfbz#270
 
