@@ -282,7 +282,7 @@ done
 
 #Fix doxygen timestamp
 touch -r Changelog doc/html/*
-touch -r Changelog $RPM_BUILD_ROOT%{_incluedir}/gpac/configuration.h
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
 
 
 %clean
