@@ -18,7 +18,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.4.cvs%{?cvs}%{?dist}
+Release:     0.5.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -180,7 +180,7 @@ rm -rf doc/ipmpx_syntax.bt.origine
 %configure \
   --enable-debug \
   --X11-path=%{_prefix} \
-  --extra-cflags="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1" \
+  --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC  -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1" \
   --disable-oss-audio \
 %{?_with_mozilla:--mozdir=%{_libdir}/mozilla/plugins} \
 %{?_with_amr:--enable-amr} \
@@ -215,9 +215,9 @@ popd
 }
 
 # Parallele build will fail
-make all OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
+make all 
 #{?_smp_mflags}
-make sggen OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
+make sggen 
 #{?_smp_mflags}
 
 ## kwizart - build doxygen doc for devel
@@ -333,6 +333,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Mar 13 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.5.cvs20100116
+- Fix CFLAGS for large files rfbz#1116
+
 * Sat Feb 27 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.4cvs20100116
 - New Attempt to fix rfbz#270
 
