@@ -18,7 +18,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.3.cvs%{?cvs}%{?dist}
+Release:     0.4.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -220,9 +220,9 @@ popd
 }
 
 # Parallele build will fail
-make all OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
+make all
 #{?_smp_mflags}
-make sggen OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
+make sggen
 #{?_smp_mflags}
 
 ## kwizart - build doxygen doc for devel
@@ -338,6 +338,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Mar 13 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.4cvs20090919
+- Fix CFLAGS for large files rfbz#1116
+
 * Sat Feb 27 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.3cvs20090919
 - New Attempt to fix rfbz#270
 
