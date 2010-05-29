@@ -7,8 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global cvs           20100116
-%global with_osmo     0
+%global cvs           20100527
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      1.9.1
@@ -18,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.5.cvs%{?cvs}%{?dist}
+Release:     0.7.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -27,14 +26,12 @@ Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{cvs}.tar.bz2
 Source9:     gpac-snapshot.sh
 #https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853860&group_id=84101
 Patch0:      gpac-0.4.6-makefix.patch
-Patch1:      gpac-0.4.5-soname.patch
+Patch1:      gpac-0.4.6-soname.patch
 Patch2:      gpac-0.4.5-amr.patch
-Patch3:      gpac-0.4.5-lib64.patch
-Patch4:      gpac-0.4.5-system_openjpeg.patch
 Patch5:      gpac-0.4.6-js_cflags.patch
 #https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853857&group_id=84101
 Patch9:      gpac-0.4.6-ffmpeg.patch
-Patch10:     gpac-0.4.6-ogl_libs.patch
+Patch11:     gpac-0.4.6-osmo.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -66,6 +63,7 @@ BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen
 BuildRequires:  desktop-file-utils
 %{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
+%{?_with_osmo:BuildRequires: gtk+-devel gtk2-devel}
 
 %description
 GPAC is a multimedia framework based on the MPEG-4 Systems standard developed
@@ -112,7 +110,7 @@ Requires: %{name}-devel = %{version}-%{release}
 %description  devel-static
 Static library for gpac.
 
-%if %{with_osmo}
+%{?_with_osmo:
 %package -n  %{osmo}
 Summary:  Media player based on gpac
 Group:    Applications/Multimedia
@@ -130,7 +128,7 @@ Osmo4 is an MPEG-4 player with the following features:
   * Support for Advanced Text and Graphics extension of MPEG-4 Systems
     under standardization.
   * Frame export to JPG, PNG, BMP.
-%endif
+}
 
 %{?_with_mozilla:
 %package -n mozilla-%{osmo}
@@ -151,13 +149,9 @@ web browsers.
 %patch0 -p1 -b .makefix
 %patch1 -p1 -b .soname
 %patch2 -p1 -b .amr
-%if %{_lib} == "lib64"
-%patch3 -p1 -b .lib64
-%endif
-%patch4 -p1 -b .openjpeg
 %patch5 -p1 -b .jscflags
 %patch9 -p1 -b .ffmpeg
-%patch10 -p1 -b .ogl_libs
+%patch11 -p1 -b .osmo
 
 ## kwizart - enable dynamic mode - hardcoded with patch2
 # define SONAME number from the first number of gpac version.
@@ -180,7 +174,7 @@ rm -rf doc/ipmpx_syntax.bt.origine
 %configure \
   --enable-debug \
   --X11-path=%{_prefix} \
-  --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC  -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1" \
+  --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1" \
   --disable-oss-audio \
 %{?_with_mozilla:--mozdir=%{_libdir}/mozilla/plugins} \
 %{?_with_amr:--enable-amr} \
@@ -215,9 +209,9 @@ popd
 }
 
 # Parallele build will fail
-make all 
+make all OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
 #{?_smp_mflags}
-make sggen 
+make sggen OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
 #{?_smp_mflags}
 
 ## kwizart - build doxygen doc for devel
@@ -236,7 +230,7 @@ install -m 755 bin/gcc/nposmozilla.so $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/
 install -m 755 bin/gcc/nposmozilla.xpt $RPM_BUILD_ROOT%{_libdir}/mozilla/components/nposmozilla.xpt
 }
 
-%if %{with_osmo}
+%{?_with_osmo:
 # Desktop menu Osmo4
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
 cat > %{osmo}.desktop <<EOF
@@ -260,9 +254,10 @@ desktop-file-install --vendor "" \
 #icons
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps
 install -pm 0644 applications/osmo4_wx/osmo4.xpm $RPM_BUILD_ROOT%{_datadir}/pixmaps/%{osmo}.xpm
-%else
+}
+%{?!_with_osmo:
 rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
-%endif
+}
 
 ## kwizart - rpmlint gpac no-ldconfig-symlink
 ln -sf  libgpac.so.%{version}-DEV $RPM_BUILD_ROOT%{_libdir}/libgpac.so.0
@@ -277,7 +272,6 @@ done
 
 #Fix doxygen timestamp
 touch -r Changelog doc/html/*
-touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
 
 
 %clean
@@ -291,8 +285,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS BUGS Changelog COPYING README TODO 
-%{_bindir}/MP4*
-%{_bindir}/*Gen
+%{_bindir}/MP4Box
+%{_bindir}/MP4Client
+%{_bindir}/MPEG4Gen
+%{_bindir}/SVGGen
+%{_bindir}/X3DGen
 %{_datadir}/gpac/
 %{_mandir}/man1/*.1.*
 
@@ -301,14 +298,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgpac.so.*
 %{_libdir}/gpac/
 
-%if %{with_osmo}
+%{?_with_osmo:
 %files -n %{osmo}
 %defattr(-,root,root,-)
 %doc AUTHORS BUGS COPYING README TODO
 %{_bindir}/Osmo4
 %{_datadir}/applications/*.desktop
 %{_datadir}/pixmaps/%{osmo}.xpm
-%endif
+}
 
 %{?_with_mozilla:
 %files -n mozilla-%{osmo}
@@ -333,6 +330,17 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 29 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.7cvs20100116
+- Rewrite soname patch that is still needed.
+- Allow --with osmo conditional
+- Explicitely list binaries.
+
+* Thu May 27 2010 Lucas Jacobs <lucas.jacobs@mines.sdsmt.edu> - 0.4.6-0.6cvs20100527
+- Update to 20100527
+- Removed upstreamed lib64, soname, OpenJPEG, OpenGL patches
+- Update ffmpeg, makefix and amr patches
+- Added patch to build osmo4_wx properly
+
 * Sat Mar 13 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.5.cvs20100116
 - Fix CFLAGS for large files rfbz#1116
 

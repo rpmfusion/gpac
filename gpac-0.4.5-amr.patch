@@ -1,20 +1,6 @@
-diff -up gpac/modules/amr_dec/amr_dec.c.amr gpac/modules/amr_dec/amr_dec.c
---- gpac/modules/amr_dec/amr_dec.c.amr	2008-12-17 12:33:30.000000000 +0100
-+++ gpac/modules/amr_dec/amr_dec.c	2008-12-17 12:33:52.000000000 +0100
-@@ -24,8 +24,8 @@
- 
- 
- /*include AMR stuff*/
--#include "amr_nb/sp_dec.h"
--#include "amr_nb/d_homing.h"
-+#include <amrnb/sp_dec.h>
-+#include <amrnb/d_homing.h>
- /*remove AMR types to avoid any typedef warning/error*/
- #undef Float
- #undef Bool
 diff -up gpac/modules/amr_dec/Makefile.amr gpac/modules/amr_dec/Makefile
---- gpac/modules/amr_dec/Makefile.amr	2008-12-17 12:33:42.000000000 +0100
-+++ gpac/modules/amr_dec/Makefile	2008-12-17 12:33:49.000000000 +0100
+--- gpac/modules/amr_dec/Makefile.amr	2010-05-04 05:27:18.000000000 -0600
++++ gpac/modules/amr_dec/Makefile	2010-05-27 13:02:48.630191469 -0600
 @@ -17,31 +17,7 @@ LDFLAGS+=-pg
  endif
  
@@ -48,8 +34,8 @@ diff -up gpac/modules/amr_dec/Makefile.amr gpac/modules/amr_dec/Makefile
  
  SRCS := $(OBJS:.o=.c) 
  
-@@ -56,11 +32,14 @@ else
- OBJSPIC=$(OBJS)
+@@ -50,11 +26,14 @@ ifeq ($(CONFIG_WIN32),yes)
+ #LDFLAGS+=-export-symbols amr_dec.def 
  endif
  
 +AMR_NB_LIBS=-lamrnb
@@ -59,32 +45,14 @@ diff -up gpac/modules/amr_dec/Makefile.amr gpac/modules/amr_dec/Makefile
  
  
  $(LIB): $(OBJS)
--	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJSPIC) $(EXTRALIBS) -L../../bin/gcc -lgpac
-+	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJSPIC) $(AMR_NB_LIBS) $(AMR_WB_LIBS) $(EXTRALIBS) -L../../bin/gcc -lgpac
+-	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJS) $(EXTRALIBS) -L../../bin/gcc -lgpac
++	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJS) $(AMR_NB_LIBS) $(AMR_WB_LIBS) $(EXTRALIBS) -L../../bin/gcc -lgpac
  
  
  %.o: %.c
-diff -up gpac/modules/amr_float_dec/amr_float_dec.c.amr gpac/modules/amr_float_dec/amr_float_dec.c
---- gpac/modules/amr_float_dec/amr_float_dec.c.amr	2008-12-17 12:37:26.000000000 +0100
-+++ gpac/modules/amr_float_dec/amr_float_dec.c	2008-12-17 12:38:07.000000000 +0100
-@@ -31,12 +31,12 @@
- 
- #ifdef GPAC_HAS_AMR_FT
- /*AMR NB*/
--#include "amr_nb_ft/interf_dec.h"
-+#include <amrnb/interf_dec.h>
- #endif
- 
- #ifdef GPAC_HAS_AMR_FT_WB
- /*AMR WB*/
--#include "amr_wb_ft/dec_if.h"
-+#include <amrwb/dec_if.h>
- #endif
- 
- /*default size in CU of composition memory for audio*/
 diff -up gpac/modules/amr_float_dec/Makefile.amr gpac/modules/amr_float_dec/Makefile
---- gpac/modules/amr_float_dec/Makefile.amr	2008-12-17 12:34:17.000000000 +0100
-+++ gpac/modules/amr_float_dec/Makefile	2008-12-17 12:36:56.000000000 +0100
+--- gpac/modules/amr_float_dec/Makefile.amr	2010-05-04 05:27:21.000000000 -0600
++++ gpac/modules/amr_float_dec/Makefile	2010-05-27 13:05:42.286191285 -0600
 @@ -21,16 +21,18 @@ OBJS=../amr_dec/amr_in.o amr_float_dec.o
  #AMR NB obj
  CFLAGS+=-DGPAC_HAS_AMR_FT
@@ -108,12 +76,12 @@ diff -up gpac/modules/amr_float_dec/Makefile.amr gpac/modules/amr_float_dec/Make
  endif
  
  
-@@ -51,7 +53,7 @@ all: $(LIB)
+@@ -45,7 +47,7 @@ all: $(LIB)
  
  
- $(LIB): $(OBJSPIC)
--	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJSPIC) $(EXTRALIBS) -L../../bin/gcc -lgpac
-+	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJSPIC) $(AMR_NB_LIBS) $(AMR_WB_LIBS) $(EXTRALIBS) -L../../bin/gcc -lgpac
+ $(LIB): $(OBJS)
+-	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJS) $(EXTRALIBS) -L../../bin/gcc -lgpac
++	$(CC) $(SHFLAGS) $(LDFLAGS) -o ../../bin/gcc/$@ $(OBJS) $(AMR_NB_LIBS) $(AMR_WB_LIBS) $(EXTRALIBS) -L../../bin/gcc -lgpac
  
  
  %.o: %.c
