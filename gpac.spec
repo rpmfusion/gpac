@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.7.cvs%{?cvs}%{?dist}
+Release:     0.8.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -63,7 +63,8 @@ BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen
 BuildRequires:  desktop-file-utils
 %{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
-%{?_with_osmo:BuildRequires: gtk+-devel gtk2-devel}
+BuildRequires:  gtk+-devel
+BuildRequires:  gtk2-devel
 
 %description
 GPAC is a multimedia framework based on the MPEG-4 Systems standard developed
@@ -330,7 +331,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat May 29 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.7cvs20100116
+* Sat May 29 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.8.cvs20100527
 - Rewrite soname patch that is still needed.
 - Allow --with osmo conditional
 - Explicitely list binaries.
