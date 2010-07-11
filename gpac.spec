@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.8.cvs%{?cvs}%{?dist}
+Release:     0.9.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -274,6 +274,9 @@ done
 #Fix doxygen timestamp
 touch -r Changelog doc/html/*
 
+#Fix header installed by misstake
+rm $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -331,6 +334,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 11 2010 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.9.cvs20100527
+- Fix header installed by misstake - rfbz#270c9
+
 * Sat May 29 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.4.6-0.8.cvs20100527
 - Rewrite soname patch that is still needed.
 - Allow --with osmo conditional
