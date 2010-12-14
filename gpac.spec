@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.9.cvs%{?cvs}%{?dist}
+Release:     0.11.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -274,8 +274,8 @@ done
 #Fix doxygen timestamp
 touch -r Changelog doc/html/*
 
-#Fix header installed by misstake
-rm $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
+#config.h like but not only
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
 
 
 %clean
@@ -334,6 +334,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec 14 2010 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.11.cvs20100527
+- Fix include - rfbz#1551
+
 * Sun Jul 11 2010 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.9.cvs20100527
 - Fix header installed by misstake - rfbz#270c9
 
