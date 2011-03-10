@@ -51,7 +51,7 @@ BuildRequires:  ffmpeg-devel
 BuildRequires:  js-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
-BuildRequires:  openjpeg-devel
+#BuildRequires:  openjpeg-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libogg-devel libvorbis-devel libtheora-devel
