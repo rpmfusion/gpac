@@ -32,6 +32,7 @@ Patch5:      gpac-0.4.6-js_cflags.patch
 #https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853857&group_id=84101
 Patch9:      gpac-0.4.6-ffmpeg.patch
 Patch11:     gpac-0.4.6-osmo.patch
+Patch12:     gpac-0.4.6-noldflag.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -153,6 +154,7 @@ web browsers.
 %patch5 -p1 -b .jscflags
 %patch9 -p1 -b .ffmpeg
 %patch11 -p1 -b .osmo
+%patch12 -p1 -b .noldflag
 
 ## kwizart - enable dynamic mode - hardcoded with patch2
 # define SONAME number from the first number of gpac version.
@@ -336,6 +338,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Thu Mar 10 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.12.cvs20100527
 - Rebuilt for openjpeg
+- Remove usage of --warn-common as LDFLAGS
 
 * Tue Dec 14 2010 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.11.cvs20100527
 - Fix include - rfbz#1551
