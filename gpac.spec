@@ -10,14 +10,14 @@
 %global cvs           20100527
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
-%global geckover      1.9.1
+%global geckover      2.0.0
 %global xuldir        %{_datadir}/idl/xulrunner-sdk-%{geckover}
 %global xulbindir     %{_libdir}/xulrunner-%{geckover}
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.12.cvs%{?cvs}%{?dist}
+Release:     0.13.cvs%{?cvs}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -336,6 +336,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 05 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.13.cvs20100527
+- Rebuild for js update
+
 * Thu Mar 10 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.12.cvs20100527
 - Rebuilt for openjpeg
 - Remove usage of --warn-common as LDFLAGS
