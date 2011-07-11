@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.13.cvs%{?cvs}%{?dist}
+Release:     0.13.cvs%{?cvs}%{?dist}.1
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -42,12 +42,12 @@ BuildRequires:  librsvg2-devel >= 2.5.0
 BuildRequires:  libGLU-devel
 BuildRequires:  freeglut-devel
 BuildRequires:  freetype-devel >= 2.1.4
-BuildRequires:  faad2-devel
+#BuildRequires:  faad2-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  libpng-devel >= 1.2.5
 BuildRequires:  libmad-devel
 BuildRequires:  xvidcore-devel >= 1.0.0
-BuildRequires:  ffmpeg-devel
+#BuildRequires:  ffmpeg-devel
 BuildRequires:  js-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
