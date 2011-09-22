@@ -1,7 +1,7 @@
 diff -up gpac/src/Makefile.soname gpac/src/Makefile
---- gpac/src/Makefile.soname	2010-05-29 15:48:35.000000000 +0200
-+++ gpac/src/Makefile	2010-05-29 15:57:23.000000000 +0200
-@@ -158,27 +158,27 @@ endif
+--- gpac/src/Makefile.soname	2011-09-22 22:52:41.453724213 +0200
++++ gpac/src/Makefile	2011-09-22 22:56:31.621576300 +0200
+@@ -158,12 +158,17 @@ endif
  
  
  ##libgpac library output
@@ -21,14 +21,7 @@ diff -up gpac/src/Makefile.soname gpac/src/Makefile
  endif
  EXTRALIBS+=$(GPAC_SH_FLAGS)
  endif
- 
--LD_SONAME="-Wl,-soname,$(LIB)"
--ifeq ($(CONFIG_DARWIN), yes)
--LD_SONAME=
--endif
--
- 
- SRCS := $(OBJS:.o=.c) 
+@@ -181,7 +186,7 @@ SRCS := $(OBJS:.o=.c) 
  
  all: lib
  
@@ -36,8 +29,8 @@ diff -up gpac/src/Makefile.soname gpac/src/Makefile
 +lib: $(LIBGPAC)
  
  #there's a bunch of warnings in there, get rid of them
- mcrypt: CFLAGS= $(OPTFLAGS) -w -I$(SRC_PATH)/include
-@@ -197,7 +197,7 @@ compositor: $(LIBGPAC_COMPOSITOR)
+ mcrypt: CFLAGS= $(OPTFLAGS) -w -I"$(SRC_PATH)/include"
+@@ -200,7 +205,7 @@ compositor: $(LIBGPAC_COMPOSITOR)
  	$(CC) $(CFLAGS) -c -o $@ $< 
  
  
@@ -46,7 +39,7 @@ diff -up gpac/src/Makefile.soname gpac/src/Makefile
  ifeq ($(CONFIG_DARWIN),yes)
  	libtool -s -o ../bin/gcc/libgpac_static.a $(OBJS)
  	ranlib ../bin/gcc/libgpac_static.a
-@@ -215,7 +215,7 @@ depend:
+@@ -218,7 +223,7 @@ depend:
  	$(CC) -MM $(CFLAGS) $(SRCS) 1>.depend
  
  clean: 
