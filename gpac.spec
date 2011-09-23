@@ -252,6 +252,10 @@ install -pm 0644 applications/osmo4_wx/osmo4.xpm $RPM_BUILD_ROOT%{_datadir}/pixm
 rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
 }
 
+#hack
+if [ %{_lib} = lib64 ] ; then 
+  mv $RPM_BUILD_ROOT%{_prefix/lib $RPM_BUILD_ROOT%{_libdir}
+fi
 ## kwizart - rpmlint gpac no-ldconfig-symlink
 ln -sf  libgpac.so.%{version}-DEV $RPM_BUILD_ROOT%{_libdir}/libgpac.so.0
 ln -sf  libgpac.so.0 $RPM_BUILD_ROOT%{_libdir}/libgpac.so
