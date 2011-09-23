@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global cvs           20110915
+%global svn           20110923
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -17,12 +17,12 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.4.6
-Release:     0.15.svn%{?cvs}%{?dist}
+Release:     0.16.svn%{?svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
 #Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
-Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{cvs}.tar.bz2
+Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{svn}.tar.bz2
 Source9:     gpac-snapshot.sh
 Patch1:      gpac-0.4.6_15-soname.patch
 Patch2:      gpac-0.4.5-amr.patch
@@ -326,7 +326,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Sep 22 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.15cvs20110915
+* Fri Sep 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.16svn20110923
+- Update to 20110923
+- Fix svnversion
+
+* Thu Sep 22 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.15svn20110915
 - Update to 20110915
 
 * Thu Jul 14 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.14.cvs20100527
