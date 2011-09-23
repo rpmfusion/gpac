@@ -254,7 +254,7 @@ rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
 
 #hack
 %if %{_lib} == "lib64"
-  mv $RPM_BUILD_ROOT%{_prefix/lib $RPM_BUILD_ROOT%{_libdir}
+  mv $RPM_BUILD_ROOT%{_prefix}/lib $RPM_BUILD_ROOT%{_libdir}
 %endif
 
 ## kwizart - rpmlint gpac no-ldconfig-symlink
