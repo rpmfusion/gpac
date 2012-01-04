@@ -59,7 +59,7 @@ BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
 BuildRequires:  wxGTK-devel
-BuildRequires:  xmlrpc-c-devel
+#BuildRequires:  xmlrpc-c-devel
 %{?_with_mozilla:BuildRequires: gecko-devel}
 BuildRequires:  doxygen
 BuildRequires:  desktop-file-utils
