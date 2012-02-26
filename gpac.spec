@@ -332,7 +332,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.19.svn20110923
-- Rebuilt for openjpeg
+- Rebuilt for x264/FFmpeg
 
 * Wed Jan 25 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.18.svn20110923
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
