@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global svn           20120623
+#global svn           20120623
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -17,11 +17,11 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.5.0
-Release:     1.svn%{?svn}%{?dist}
+Release:     1%{?svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
-Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{svn}.tar.bz2
+Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
 Source9:     gpac-snapshot.sh
 Patch1:      gpac-0.5.0-libdir.patch
 Patch2:      gpac-0.4.5-amr.patch
@@ -164,8 +164,7 @@ rm -rf doc/ipmpx_syntax.bt.origine
   --disable-oss-audio \
 %{?_with_mozilla:--mozdir=%{_libdir}/mozilla/plugins} \
 %{?_with_amr:--enable-amr} \
-  --disable-static \
-  --use-js=no
+  --disable-static
 
 #Avoid mess with setup.h
 cp -p config.h include/gpac
@@ -325,8 +324,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Jun 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-1.svn20120623
-- Update to 0.5.0 svn20120623
+* Sat Jun 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-1
+- Update to 0.5.0
 
 * Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.19.svn20110923
 - Rebuilt for x264/FFmpeg
