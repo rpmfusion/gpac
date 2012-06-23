@@ -164,7 +164,8 @@ rm -rf doc/ipmpx_syntax.bt.origine
   --disable-oss-audio \
 %{?_with_mozilla:--mozdir=%{_libdir}/mozilla/plugins} \
 %{?_with_amr:--enable-amr} \
-  --disable-static
+  --disable-static \
+  --use-js=no
 
 #Avoid mess with setup.h
 cp -p config.h include/gpac
