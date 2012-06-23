@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global svn           20110923
+%global svn           20120623
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -16,17 +16,15 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.4.6
-Release:     0.19.svn%{?svn}%{?dist}
+Version:     0.5.0
+Release:     1.svn%{?svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
-#Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
 Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{svn}.tar.bz2
 Source9:     gpac-snapshot.sh
-Patch1:      gpac-0.4.6_15-soname.patch
+Patch1:      gpac-0.5.0-libdir.patch
 Patch2:      gpac-0.4.5-amr.patch
-Patch5:      gpac-0.4.6-js_cflags.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -45,7 +43,7 @@ BuildRequires:  ffmpeg-devel
 BuildRequires:  js-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
-#BuildRequires:  openjpeg-devel
+BuildRequires:  openjpeg-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libogg-devel libvorbis-devel libtheora-devel
@@ -142,14 +140,8 @@ web browsers.
 
 %prep
 %setup -q -n gpac
-%patch1 -p1 -b .soname
+%patch1 -p1 -b .libdir
 %patch2 -p1 -b .amr
-%patch5 -p1 -b .jscflags
-
-## kwizart - enable dynamic mode - hardcoded with patch2
-# define SONAME number from the first number of gpac version.
-#define soname libgpac.so.0
-#sed -i.soname -e 's|EXTRALIBS+=$(GPAC_SH_FLAGS)|EXTRALIBS+=$(GPAC_SH_FLAGS)\nLDFLAGS+="-Wl,-soname,%{soname}"|' src/Makefile
 
 # Fix encoding warnings
 cp -p Changelog Changelog.origine
@@ -166,12 +158,17 @@ rm -rf doc/ipmpx_syntax.bt.origine
 %build
 %configure \
   --enable-debug \
-  --X11-path=%{_prefix} \
   --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1" \
+  --X11-path=%{_prefix} \
+  --libdir=%{_lib} \
   --disable-oss-audio \
 %{?_with_mozilla:--mozdir=%{_libdir}/mozilla/plugins} \
 %{?_with_amr:--enable-amr} \
-  --disable-static
+  --disable-static \
+  --use-js=no
+
+#Avoid mess with setup.h
+cp -p config.h include/gpac
 
 ##
 ## Osmo-zila plugin.
@@ -252,17 +249,9 @@ install -pm 0644 applications/osmo4_wx/osmo4.xpm $RPM_BUILD_ROOT%{_datadir}/pixm
 rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
 }
 
-#hack
-%if %{_lib} == "lib64"
-  mv $RPM_BUILD_ROOT%{_prefix}/lib $RPM_BUILD_ROOT%{_libdir}
-%endif
-
-## kwizart - rpmlint gpac no-ldconfig-symlink
-ln -sf  libgpac.so.%{version}-DEV $RPM_BUILD_ROOT%{_libdir}/libgpac.so.0
-ln -sf  libgpac.so.0 $RPM_BUILD_ROOT%{_libdir}/libgpac.so
-
 #Install generated sggen binaries
-for b in MPEG4 SVG X3D; do
+#for b in MPEG4 SVG X3D; do
+for b in MPEG4 X3D; do
   pushd applications/generators/${b}
     install -pm 0755 ${b}Gen $RPM_BUILD_ROOT%{_bindir}
   popd
@@ -272,7 +261,12 @@ done
 touch -r Changelog doc/html/*
 
 #config.h like but not only
-touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
+#Usual multilib bug https://bugzilla.rpmfusion.org/show_bug.cgi?id=270
+sed -i -e '/GPAC_CONFIGURATION/d' $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/*.h
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/internal/*.h
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/modules/*.h
+rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %clean
@@ -289,7 +283,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/MP4Box
 %{_bindir}/MP4Client
 %{_bindir}/MPEG4Gen
-%{_bindir}/SVGGen
+#{_bindir}/SVGGen
 %{_bindir}/X3DGen
 %{_datadir}/gpac/
 %{_mandir}/man1/*.1.*
@@ -331,6 +325,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-1.svn20120623
+- Update to 0.5.0 svn20120623
+
 * Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.19.svn20110923
 - Rebuilt for x264/FFmpeg
 
