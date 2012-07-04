@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global cvs           20100527
+#global svn           20120623
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -16,23 +16,15 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.4.6
-Release:     0.13.cvs%{?cvs}%{?dist}.3
+Version:     0.5.0
+Release:     1%{?svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
-#Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
-Source0:     http://rpms.kwizart.net/fedora/SOURCE/gpac-%{cvs}.tar.bz2
+Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
 Source9:     gpac-snapshot.sh
-#https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853860&group_id=84101
-Patch0:      gpac-0.4.6-makefix.patch
-Patch1:      gpac-0.4.6-soname.patch
+Patch1:      gpac-0.5.0-libdir.patch
 Patch2:      gpac-0.4.5-amr.patch
-Patch5:      gpac-0.4.6-js_cflags.patch
-#https://sourceforge.net/tracker/?func=detail&atid=571740&aid=2853857&group_id=84101
-Patch9:      gpac-0.4.6-ffmpeg.patch
-Patch11:     gpac-0.4.6-osmo.patch
-Patch12:     gpac-0.4.6-noldflag.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -42,16 +34,16 @@ BuildRequires:  librsvg2-devel >= 2.5.0
 BuildRequires:  libGLU-devel
 BuildRequires:  freeglut-devel
 BuildRequires:  freetype-devel >= 2.1.4
-#BuildRequires:  faad2-devel
+BuildRequires:  faad2-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  libpng-devel >= 1.2.5
 BuildRequires:  libmad-devel
 BuildRequires:  xvidcore-devel >= 1.0.0
-#BuildRequires:  ffmpeg-devel
+BuildRequires:  ffmpeg-devel
 BuildRequires:  js-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
-#BuildRequires:  openjpeg-devel
+BuildRequires:  openjpeg-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libogg-devel libvorbis-devel libtheora-devel
@@ -59,7 +51,7 @@ BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
 BuildRequires:  wxGTK-devel
-#BuildRequires:  xmlrpc-c-devel
+BuildRequires:  xmlrpc-c-devel
 %{?_with_mozilla:BuildRequires: gecko-devel}
 BuildRequires:  doxygen
 BuildRequires:  desktop-file-utils
@@ -148,18 +140,8 @@ web browsers.
 
 %prep
 %setup -q -n gpac
-%patch0 -p1 -b .makefix
-%patch1 -p1 -b .soname
+%patch1 -p1 -b .libdir
 %patch2 -p1 -b .amr
-%patch5 -p1 -b .jscflags
-%patch9 -p1 -b .ffmpeg
-%patch11 -p1 -b .osmo
-%patch12 -p1 -b .noldflag
-
-## kwizart - enable dynamic mode - hardcoded with patch2
-# define SONAME number from the first number of gpac version.
-#define soname libgpac.so.0
-#sed -i.soname -e 's|EXTRALIBS+=$(GPAC_SH_FLAGS)|EXTRALIBS+=$(GPAC_SH_FLAGS)\nLDFLAGS+="-Wl,-soname,%{soname}"|' src/Makefile
 
 # Fix encoding warnings
 cp -p Changelog Changelog.origine
@@ -176,12 +158,17 @@ rm -rf doc/ipmpx_syntax.bt.origine
 %build
 %configure \
   --enable-debug \
-  --X11-path=%{_prefix} \
   --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1" \
+  --X11-path=%{_prefix} \
+  --libdir=%{_lib} \
   --disable-oss-audio \
 %{?_with_mozilla:--mozdir=%{_libdir}/mozilla/plugins} \
 %{?_with_amr:--enable-amr} \
-  --disable-static
+  --disable-static \
+  --use-js=no
+
+#Avoid mess with setup.h
+cp -p config.h include/gpac
 
 ##
 ## Osmo-zila plugin.
@@ -224,7 +211,7 @@ popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT install install-lib
+make DESTDIR=$RPM_BUILD_ROOT install install-lib INSTFLAGS="-p"
 
 %{?_with_mozilla:
 ## kwizart - Install osmozilla plugin - make instmoz disabled.
@@ -262,12 +249,9 @@ install -pm 0644 applications/osmo4_wx/osmo4.xpm $RPM_BUILD_ROOT%{_datadir}/pixm
 rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
 }
 
-## kwizart - rpmlint gpac no-ldconfig-symlink
-ln -sf  libgpac.so.%{version}-DEV $RPM_BUILD_ROOT%{_libdir}/libgpac.so.0
-ln -sf  libgpac.so.0 $RPM_BUILD_ROOT%{_libdir}/libgpac.so
-
 #Install generated sggen binaries
-for b in MPEG4 SVG X3D; do
+#for b in MPEG4 SVG X3D; do
+for b in MPEG4 X3D; do
   pushd applications/generators/${b}
     install -pm 0755 ${b}Gen $RPM_BUILD_ROOT%{_bindir}
   popd
@@ -277,7 +261,12 @@ done
 touch -r Changelog doc/html/*
 
 #config.h like but not only
-touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
+#Usual multilib bug https://bugzilla.rpmfusion.org/show_bug.cgi?id=270
+sed -i -e '/GPAC_CONFIGURATION/d' $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/*.h
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/internal/*.h
+touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/modules/*.h
+rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %clean
@@ -294,7 +283,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/MP4Box
 %{_bindir}/MP4Client
 %{_bindir}/MPEG4Gen
-%{_bindir}/SVGGen
+#{_bindir}/SVGGen
 %{_bindir}/X3DGen
 %{_datadir}/gpac/
 %{_mandir}/man1/*.1.*
@@ -336,6 +325,28 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-1
+- Update to 0.5.0
+
+* Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.19.svn20110923
+- Rebuilt for x264/FFmpeg
+
+* Wed Jan 25 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.18.svn20110923
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Oct 03 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.17.svn20110923
+- Update gpac-soname.patch
+
+* Fri Sep 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.16svn20110923
+- Update to 20110923
+- Fix svnversion
+
+* Thu Sep 22 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.15svn20110915
+- Update to 20110915
+
+* Thu Jul 14 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.14.cvs20100527
+- Rebuild
+
 * Sun Jun 05 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.4.6-0.13.cvs20100527
 - Rebuild for js update
 
