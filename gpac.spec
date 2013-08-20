@@ -24,8 +24,6 @@ URL:         http://gpac.sourceforge.net/
 #Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
 Source0:     gpac-%{svn}.tar.xz
 Source9:     gpac-snapshot.sh
-Patch1:      gpac-0.5.0-libdir.patch
-Patch2:      gpac-0.4.5-amr.patch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
@@ -141,15 +139,8 @@ web browsers.
 
 %prep
 %setup -q -n gpac
-%patch1 -p1 -b .libdir
-%patch2 -p1 -b .amr
-
+exit 0
 # Fix encoding warnings
-cp -p Changelog Changelog.origine
-iconv -f ISO-8859-1 -t UTF8 Changelog.origine >  Changelog
-touch -r Changelog.origine Changelog
-rm -rf Changelog.origine
-
 cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
 iconv -f ISO-8859-1 -t UTF8 doc/ipmpx_syntax.bt.origine >  doc/ipmpx_syntax.bt
 touch -r doc/ipmpx_syntax.bt.origine doc/ipmpx_syntax.bt
