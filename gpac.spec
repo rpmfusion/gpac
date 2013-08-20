@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-#global svn           20120623
+%global svn           20130820
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -17,11 +17,12 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.5.0
-Release:     5%{?svn}%{?dist}
+Release:     6%{?svn:.%{svn}svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
-Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
+#Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
+Source0:     gpac-%{svn}.tar.xz
 Source9:     gpac-snapshot.sh
 Patch1:      gpac-0.5.0-libdir.patch
 Patch2:      gpac-0.4.5-amr.patch
@@ -325,6 +326,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-6.20130820svn
+- Update to 20130820
+
 * Thu Aug 15 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-5
 - Rebuilt for FFmpeg 2.0.x
 

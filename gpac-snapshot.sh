@@ -15,10 +15,10 @@ pwd=$(pwd)
 svn=$(date +%Y%m%d)
 
 cd "$tmp"
-svn co http://gpac.svn.sourceforge.net/svnroot/gpac/trunk/gpac gpac
+svn co http://svn.code.sf.net/p/gpac/code/trunk/gpac gpac
 revision=$(svnversion gpac)
 echo "#define GPAC_SVN_REVISION	\"$revision\"" > gpac/include/gpac/version.h
-find gpac -name '.svn' -type d  -exec rm -rf {} ';' || :
+find gpac -name ".svn" -type d  -exec rm -rf {} ';' || :
 rm -rf gpac/extra_lib/
-tar jcf "$pwd"/gpac-$svn.tar.bz2 gpac
+tar Jcf "$pwd"/gpac-$svn.tar.xz gpac
 cd - >/dev/null
