@@ -470,7 +470,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Apr 11 2007 kwizart < kwizart at gmail.com > - 0.4.3-0.1cvs20070411
 - Update to cvs 20070411
 
-* Thu Dec 08 2006 kwizart < kwizart at gmail.com > - 0.4.3-cvs20061208.1.kwizart.fc6
+* Fri Dec 08 2006 kwizart < kwizart at gmail.com > - 0.4.3-cvs20061208.1.kwizart.fc6
 - Update to 20061208
 - Uses firefox-devel (since fc6!)
 - Drop tutorial
@@ -492,7 +492,7 @@ rm -rf $RPM_BUILD_ROOT
   (Details: serial 37 error_code 8 request_code 42 minor_code 0)"
   - MP4Box -version display: GPAC version 0.4.3-DEV (try to display cvs )
 
-* Sat Oct 15 2006 kwizart < kwizart at gmail.com > - 0.4.2-rc2.1_FC5
+* Tue Oct 17 2006 kwizart < kwizart at gmail.com > - 0.4.2-rc2.1_FC5
 - Update to 0.4.2cvs20061017
 - Use DESTDIR=RPM_BUILD_ROOT in various Makefile.
 - Enable mozilla plugin: osmozilla.
@@ -504,5 +504,5 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Sep 01 2006 Anssi Hannula <anssi@zarb.org> 0.4.1-0.20060630.2plf2007.0
 - lib64 fixes
 
-* Fri Jan 30 2006 Austin Acton <austin@mandriva.org> 0.4.1-0.20060630.1plf2007.0
+* Fri Jun 30 2006 Austin Acton <austin@mandriva.org> 0.4.1-0.20060630.1plf2007.0
 - initial package
