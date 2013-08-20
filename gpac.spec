@@ -150,7 +150,7 @@ rm -rf doc/ipmpx_syntax.bt.origine
 %build
 %configure \
   --enable-debug \
-  --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1" \
+  --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 -DGPAC_FULL_VERSION=%{version}-%{release}" \
   --X11-path=%{_prefix} \
   --libdir=%{_lib} \
   --disable-oss-audio \
