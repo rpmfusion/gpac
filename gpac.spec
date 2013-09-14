@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global svn           20130820
+%global svn           20130914
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.5.0
-Release:     6%{?svn:.%{svn}svn}%{?dist}
+Release:     7%{?svn:.%{svn}svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -139,18 +139,20 @@ web browsers.
 
 %prep
 %setup -q -n gpac
-exit 0
 # Fix encoding warnings
 cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
 iconv -f ISO-8859-1 -t UTF8 doc/ipmpx_syntax.bt.origine >  doc/ipmpx_syntax.bt
 touch -r doc/ipmpx_syntax.bt.origine doc/ipmpx_syntax.bt
 rm -rf doc/ipmpx_syntax.bt.origine
 
+echo "#define GPAC_FULL_VERSION GPAC_SVN_REVISION" >> include/gpac/version.h
+echo "#define GPAC_VERSION GPAC_FULL_VERSION" >> include/gpac/version.h
+
 
 %build
 %configure \
   --enable-debug \
-  --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 -DGPAC_FULL_VERSION=%{version}-%{release}" \
+  --extra-cflags="$RPM_OPT_FLAGS -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 $(pkg-config --cflags libavformat)" \
   --X11-path=%{_prefix} \
   --libdir=%{_lib} \
   --disable-oss-audio \
@@ -191,9 +193,9 @@ popd
 }
 
 # Parallele build will fail
-make all OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
+make all
 #{?_smp_mflags}
-make sggen OPTFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" 
+make sggen
 #{?_smp_mflags}
 
 ## kwizart - build doxygen doc for devel
@@ -272,6 +274,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS BUGS Changelog COPYING README TODO 
+%{_bindir}/DashCast
 %{_bindir}/MP4Box
 %{_bindir}/MP4Client
 %{_bindir}/MPEG4Gen
@@ -317,6 +320,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 14 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-7.20130914svn
+- Update to 20130914
+
 * Tue Aug 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-6.20130820svn
 - Update to 20130820
 
