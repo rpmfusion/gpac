@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global svn           20130914
+%global svn           20140915
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -17,14 +17,13 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.5.0
-Release:     10%{?svn:.%{svn}svn}%{?dist}
+Release:     11%{?svn:.%{svn}svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
 #Source0:     http://downloads.sourceforge.net/gpac/gpac-%{version}.tar.gz
 Source0:     gpac-%{svn}.tar.xz
 Source9:     gpac-snapshot.sh
-BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 
 BuildRequires:  ImageMagick
 BuildRequires:  SDL-devel
@@ -52,7 +51,7 @@ BuildRequires:  libXv-devel
 BuildRequires:  wxGTK-devel
 BuildRequires:  xmlrpc-c-devel
 %{?_with_mozilla:BuildRequires: gecko-devel}
-BuildRequires:  doxygen
+BuildRequires:  doxygen graphviz
 BuildRequires:  desktop-file-utils
 %{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
 BuildRequires:  gtk+-devel
@@ -192,11 +191,8 @@ popd
 #  install
 }
 
-# Parallele build will fail
-make all
-#{?_smp_mflags}
-make sggen
-#{?_smp_mflags}
+make %{?_smp_mflags} all 
+make %{?_smp_mflags} sggen
 
 ## kwizart - build doxygen doc for devel
 pushd doc
@@ -204,7 +200,6 @@ doxygen
 popd
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install install-lib INSTFLAGS="-p"
 
 %{?_with_mozilla:
@@ -252,7 +247,7 @@ for b in MPEG4 X3D; do
 done
 
 #Fix doxygen timestamp
-touch -r Changelog doc/html/*
+touch -r Changelog doc/html-libgpac/*
 
 #config.h like but not only
 #Usual multilib bug https://bugzilla.rpmfusion.org/show_bug.cgi?id=270
@@ -262,9 +257,6 @@ touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/internal/*.h
 touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/modules/*.h
 rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post libs -p /sbin/ldconfig
 
@@ -306,7 +298,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-,root,root,-)
-%doc doc/html/*
+%doc doc/html-libgpac/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -320,6 +312,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 15 2014 Sérgio Basto <sergio@serjux.com> - 0.5.0-11.20140915svn
+- Update to 20140915
+- Some clean ups, fix location of html files.
+
 * Thu Aug 07 2014 Sérgio Basto <sergio@serjux.com> - 0.5.0-10.20130914svn
 - Rebuilt for ffmpeg-2.3
 
