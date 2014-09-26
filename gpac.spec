@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.5.0
-Release:     11%{?svn:.%{svn}svn}%{?dist}
+Release:     12%{?svn:.%{svn}svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -312,6 +312,9 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %changelog
+* Fri Sep 26 2014 Nicolas Chauvet <kwizart@gmail.com> - 0.5.0-12.20140915svn
+- Rebuilt for FFmpeg 2.4.x
+
 * Mon Sep 15 2014 Sérgio Basto <sergio@serjux.com> - 0.5.0-11.20140915svn
 - Update to 20140915
 - Some clean ups, fix location of html files.
