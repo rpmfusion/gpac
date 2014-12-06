@@ -7,7 +7,7 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 %global osmo          Osmo4
-%global svn           20140915
+%global svn           20141206
 # Mozilla stuff fails. It's completely disabled for now.
 %global mozver        3.0
 %global geckover      2.0.0
@@ -16,8 +16,8 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.5.0
-Release:     13%{?svn:.%{svn}svn}%{?dist}
+Version:     0.5.1
+Release:     14%{?svn:.%{svn}svn}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -143,9 +143,6 @@ cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
 iconv -f ISO-8859-1 -t UTF8 doc/ipmpx_syntax.bt.origine >  doc/ipmpx_syntax.bt
 touch -r doc/ipmpx_syntax.bt.origine doc/ipmpx_syntax.bt
 rm -rf doc/ipmpx_syntax.bt.origine
-
-echo "#define GPAC_FULL_VERSION GPAC_SVN_REVISION" >> include/gpac/version.h
-echo "#define GPAC_VERSION GPAC_FULL_VERSION" >> include/gpac/version.h
 
 
 %build
@@ -312,6 +309,10 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %changelog
+* Sat Dec 06 2014 Nicolas Chauvet <kwizart@gmail.com> - 0.5.1-14.20141206svn
+- Update to svn20141206 - last svn rev 5542
+- Fix invalid SONAME - rfbz#3365
+
 * Sun Oct 19 2014 Sérgio Basto <sergio@serjux.com> - 0.5.0-13.20140915svn
 - Rebuilt for FFmpeg 2.4.3
 
