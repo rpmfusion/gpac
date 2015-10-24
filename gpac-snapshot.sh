@@ -1,21 +1,12 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
-tmp=$(mktemp -d)
+DIRNAME=gpac-$(date +%Y%m%d)
 
-trap cleanup EXIT
-cleanup() {
-    set +e
-    [ -z "$tmp" -o ! -d "$tmp" ] || rm -rf "$tmp"
-}
+git clone --depth 1 https://github.com/gpac/gpac.git ${DIRNAME}
 
-unset CDPATH
-pwd=$(pwd)
-svn=$(date +%Y%m%d)
+rm -rf ${DIRNAME}/.git
+rm -rf ${DIRNAME}/extra_lib
 
-cd "$tmp"
-svn export http://svn.code.sf.net/p/gpac/code/trunk/gpac gpac
-rm -rf gpac/extra_lib/
-tar Jcf "$pwd"/gpac-$svn.tar.xz gpac
-cd - >/dev/null
+tar cJf ${DIRNAME}.tar.xz ${DIRNAME}
