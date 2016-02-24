@@ -16,13 +16,12 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.5.2
+Version:     0.6.0
 Release:     1%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
-Source0:     https://github.com/gpac/gpac/archive/v%{version}.tar.gz
-#Source0:     gpac-%{git}.tar.xz
+Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
 #Source9:     gpac-snapshot.sh
 
 BuildRequires:  ImageMagick
@@ -262,7 +261,8 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS BUGS Changelog COPYING README TODO 
+%doc AUTHORS BUGS Changelog README.md TODO
+%license COPYING
 %{_bindir}/DashCast
 %{_bindir}/MP42TS
 %{_bindir}/MP4Box
@@ -310,6 +310,9 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %changelog
+* Wed Feb 24 2016 Sérgio Basto <sergio@serjux.com> - 0.6.0-1
+- Update to 0.6.0
+
 * Sun Oct 11 2015 Michael Kuhn <suraia@ikkoku.de> - 0.5.2-1
 - Update to 0.5.2.
 
