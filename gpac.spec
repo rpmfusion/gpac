@@ -137,6 +137,7 @@ web browsers.
 
 %prep
 %setup -q
+rm -r extra_lib/
 # Fix encoding warnings
 cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
 iconv -f ISO-8859-1 -t UTF8 doc/ipmpx_syntax.bt.origine >  doc/ipmpx_syntax.bt
@@ -260,7 +261,6 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS BUGS Changelog README.md TODO
 %license COPYING
 %{_bindir}/DashCast
@@ -274,14 +274,13 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 %{_mandir}/man1/*.1.*
 
 %files libs
-%defattr(-,root,root,-)
 %{_libdir}/libgpac.so.*
 %{_libdir}/gpac/
 
 %{?_with_osmo:
 %files -n %{osmo}
-%defattr(-,root,root,-)
-%doc AUTHORS BUGS COPYING README TODO
+%doc AUTHORS BUGS README TODO
+%lincense COPYING
 %{_bindir}/Osmo4
 %{_datadir}/applications/*.desktop
 %{_datadir}/pixmaps/%{osmo}.xpm
@@ -289,29 +288,28 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 %{?_with_mozilla:
 %files -n mozilla-%{osmo}
-%defattr(-,root,root,-)
 %{_libdir}/mozilla/plugins/nposmozilla.so
 %{_libdir}/mozilla/components/nposmozilla.xpt
 }
 
 %files doc
-%defattr(-,root,root,-)
 %doc doc/html-libgpac/*
 
 %files devel
-%defattr(-,root,root,-)
 %doc doc/CODING_STYLE doc/ipmpx_syntax.bt
 %{_includedir}/gpac/
 %{_libdir}/libgpac.so
 
 %files devel-static
-%defattr(-,root,root,-)
 %{_libdir}/libgpac_static.a
 
 
 %changelog
 * Wed Feb 24 2016 Sérgio Basto <sergio@serjux.com> - 0.6.0-1
 - Update to 0.6.0
+- Remove extra_lib directory from sources, like do gpac-snapshot.sh.
+- Add License tag.
+- Clean defattr(s).
 
 * Sun Oct 11 2015 Michael Kuhn <suraia@ikkoku.de> - 0.5.2-1
 - Update to 0.5.2.
