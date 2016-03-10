@@ -16,7 +16,7 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.6.0
+Version:     0.6.1
 Release:     1%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
@@ -305,6 +305,9 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %changelog
+* Thu Mar 10 2016 Sérgio Basto <sergio@serjux.com> - 0.6.1-1
+- Update to 0.6.1
+
 * Wed Feb 24 2016 Sérgio Basto <sergio@serjux.com> - 0.6.0-1
 - Update to 0.6.0
 - Remove extra_lib directory from sources, like do gpac-snapshot.sh.
