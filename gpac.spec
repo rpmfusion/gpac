@@ -17,11 +17,14 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.6.1
-Release:     2%{?git:.%{git}git}%{?dist}
+Release:     3%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
+# https://github.com/openssl/openssl/issues/1543
+# Simply remove the call to SSLeay_add_all_algorithms, the addition is now done automatically and internally in libssl.
+Patch0:      openssl-1.1.0.patch
 #Source9:     gpac-snapshot.sh
 
 BuildRequires:  ImageMagick
@@ -137,6 +140,9 @@ web browsers.
 
 %prep
 %setup -q
+%if 0%{?fedora} >= 26
+%patch0 -p1
+%endif
 rm -r extra_lib/
 # Fix encoding warnings
 cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
@@ -305,6 +311,9 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %changelog
+* Sat Oct 29 2016 Leigh Scott <leigh123linux@googlemail.com> - 0.6.1-3
+- Fix build with openssl-1.1.0
+
 * Sat Jul 30 2016 Julian Sikorski <belegdol@fedoraproject.org> - 0.6.1-2
 - Rebuilt for ffmpeg-3.1.1
 
