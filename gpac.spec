@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.6.1
-Release:     3%{?git:.%{git}git}%{?dist}
+Release:     4%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -311,6 +311,9 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %changelog
+* Sun Mar 19 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.6.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Sat Oct 29 2016 Leigh Scott <leigh123linux@googlemail.com> - 0.6.1-3
 - Fix build with openssl-1.1.0
 
