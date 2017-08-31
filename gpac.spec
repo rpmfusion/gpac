@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.7.1
-Release:     1%{?git:.%{git}git}%{?dist}
+Release:     2%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
 Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
@@ -314,6 +314,9 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 
 
 %changelog
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.7.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Sat Apr 29 2017 Leigh Scott <leigh123linux@googlemail.com> - 0.7.1-1
 - Update to 0.7.1
 
