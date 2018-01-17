@@ -1,14 +1,3 @@
-From 855aafe47677de558a7dd5f772b8094b54bfe61a Mon Sep 17 00:00:00 2001
-From: jeanlf <jeanlf@users.sourceforge.net>
-Date: Tue, 16 Jan 2018 16:21:28 +0100
-Subject: [PATCH] fixed compil bug with latest ffmpeg
-
----
- applications/dashcast/video_encoder.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/applications/dashcast/video_encoder.c b/applications/dashcast/video_encoder.c
-index 1632ffe38..9e2238aa1 100644
 --- a/applications/dashcast/video_encoder.c
 +++ b/applications/dashcast/video_encoder.c
 @@ -143,8 +143,10 @@ int dc_video_encoder_open(VideoOutputFile *video_output_file, VideoDataConf *vid
@@ -22,3 +11,33 @@ index 1632ffe38..9e2238aa1 100644
  
  	video_output_file->vstream_idx = 0;//video_stream->index;
  
+--- a/modules/ffmpeg_in/ffmpeg_decode.c
++++ b/modules/ffmpeg_in/ffmpeg_decode.c
+@@ -49,7 +49,7 @@
+ static uint8_t * ffmpeg_realloc_buffer(uint8_t * oldBuffer, u32 size) {
+ 	uint8_t * buffer;
+ 	/* Size of buffer must be larger, see avcodec_decode_video2 documentation */
+-	u32 allocatedSz = sizeof( char ) * (FF_INPUT_BUFFER_PADDING_SIZE + size);
++	u32 allocatedSz = sizeof( char ) * (AV_INPUT_BUFFER_PADDING_SIZE + size);
+ 	if (oldBuffer)
+ 		gf_free(oldBuffer);
+ 	buffer = (uint8_t*)gf_malloc( allocatedSz );
+@@ -577,7 +577,7 @@
+ 		capability->cap.valueInt = 1;
+ 		return GF_OK;
+ 	case GF_CODEC_PADDING_BYTES:
+-		capability->cap.valueInt = FF_INPUT_BUFFER_PADDING_SIZE;
++		capability->cap.valueInt = AV_INPUT_BUFFER_PADDING_SIZE;
+ 		return GF_OK;
+ 	case GF_CODEC_REORDER:
+ 		capability->cap.valueInt = 1;
+@@ -669,7 +669,7 @@
+ 		break;
+ 
+ 	case GF_CODEC_PADDING_BYTES:
+-		capability->cap.valueInt = FF_INPUT_BUFFER_PADDING_SIZE;
++		capability->cap.valueInt = AV_INPUT_BUFFER_PADDING_SIZE;
+ 		break;
+ 	default:
+ 		capability->cap.valueInt = 0;
+
