@@ -1,0 +1,24 @@
+From 855aafe47677de558a7dd5f772b8094b54bfe61a Mon Sep 17 00:00:00 2001
+From: jeanlf <jeanlf@users.sourceforge.net>
+Date: Tue, 16 Jan 2018 16:21:28 +0100
+Subject: [PATCH] fixed compil bug with latest ffmpeg
+
+---
+ applications/dashcast/video_encoder.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/applications/dashcast/video_encoder.c b/applications/dashcast/video_encoder.c
+index 1632ffe38..9e2238aa1 100644
+--- a/applications/dashcast/video_encoder.c
++++ b/applications/dashcast/video_encoder.c
+@@ -143,8 +143,10 @@ int dc_video_encoder_open(VideoOutputFile *video_output_file, VideoDataConf *vid
+ 		av_opt_set_int(video_output_file->codec_ctx->priv_data, "key-int", video_output_file->gdr, 0);
+ 	}
+ 
++#ifdef CODEC_FLAG_GLOBAL_HEADER
+ 	//the global header gives access to the extradata (SPS/PPS)
+ 	video_output_file->codec_ctx->flags |= CODEC_FLAG_GLOBAL_HEADER;
++#endif
+ 
+ 	video_output_file->vstream_idx = 0;//video_stream->index;
+ 

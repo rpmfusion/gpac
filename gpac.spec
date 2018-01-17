@@ -27,6 +27,8 @@ Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.ta
 Patch0:      openssl-1.1.0.patch
 # Upstream commit, fix typo
 Patch1:      https://github.com/gpac/gpac/commit/669258a21dcc9827e1496c460af0bff83aa5d654.patch#/fix_typo.patch
+# Upstream build fix for ffmpeg-3.5
+Patch2:      https://github.com/gpac/gpac/commit/855aafe47677de558a7dd5f772b8094b54bfe61a.patch#/ffmpeg35_buildfix.patch
 #Source9:     gpac-snapshot.sh
 
 BuildRequires:  ImageMagick
@@ -146,6 +148,7 @@ web browsers.
 %patch0 -p1
 %endif
 %patch1 -p1
+%patch2 -p1
 rm -r extra_lib/
 # Fix encoding warnings
 cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
