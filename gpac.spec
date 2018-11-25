@@ -100,9 +100,7 @@ Static library for gpac.
 
 %prep
 %setup -q
-%if 0%{?fedora} >= 26
 %patch0 -p1
-%endif
 %patch1 -p1
 %patch2 -p1
 rm -r extra_lib/
