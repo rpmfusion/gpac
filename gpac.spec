@@ -135,13 +135,13 @@ popd
 
 %install
 %{make_install} install-lib
-rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
+rm -rf %buildroot%{_bindir}/%{osmo}
 
 #Install generated sggen binaries
 #for b in MPEG4 SVG X3D; do
 for b in MPEG4 X3D; do
   pushd applications/generators/${b}
-    install -pm 0755 ${b}Gen $RPM_BUILD_ROOT%{_bindir}
+    install -pm 0755 ${b}Gen %buildroot%{_bindir}
   popd
 done
 
@@ -150,11 +150,11 @@ touch -r Changelog doc/html-libgpac/*
 
 #config.h like but not only
 #Usual multilib bug https://bugzilla.rpmfusion.org/show_bug.cgi?id=270
-sed -i -e '/GPAC_CONFIGURATION/d' $RPM_BUILD_ROOT%{_includedir}/gpac/configuration.h
-touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/*.h
-touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/internal/*.h
-touch -r Changelog $RPM_BUILD_ROOT%{_includedir}/gpac/modules/*.h
-rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
+sed -i -e '/GPAC_CONFIGURATION/d' %buildroot%{_includedir}/gpac/configuration.h
+touch -r Changelog %buildroot%{_includedir}/gpac/*.h
+touch -r Changelog %buildroot%{_includedir}/gpac/internal/*.h
+touch -r Changelog %buildroot%{_includedir}/gpac/modules/*.h
+rm %buildroot%{_includedir}/gpac/config.h
 
 
 %post libs -p /sbin/ldconfig
