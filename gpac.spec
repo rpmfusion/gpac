@@ -50,7 +50,7 @@ BuildRequires:  libXv-devel
 BuildRequires:  wxGTK-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen graphviz
-BuildRequires:  desktop-file-utils
+BuildRequires:  gcc
 %{?_with_amr:BuildRequires: amrnb-devel
 BuildRequires:  amrwb-devel}
 BuildRequires:  gtk+-devel
