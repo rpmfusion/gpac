@@ -157,10 +157,7 @@ touch -r Changelog %buildroot%{_includedir}/gpac/modules/*.h
 rm %buildroot%{_includedir}/gpac/config.h
 
 
-%post libs -p /sbin/ldconfig
-
-%postun libs -p /sbin/ldconfig
-
+%ldconfig_scriptlets libs
 
 %files
 %doc AUTHORS BUGS Changelog README.md TODO
