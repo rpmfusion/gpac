@@ -49,7 +49,9 @@ BuildRequires:  openssl-devel
 BuildRequires:  openjpeg-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  zlib-devel
-BuildRequires:  libogg-devel libvorbis-devel libtheora-devel
+BuildRequires:  libogg-devel
+BuildRequires:  libvorbis-devel
+BuildRequires:  libtheora-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
@@ -58,7 +60,8 @@ BuildRequires:  xmlrpc-c-devel
 %{?_with_mozilla:BuildRequires: gecko-devel}
 BuildRequires:  doxygen graphviz
 BuildRequires:  desktop-file-utils
-%{?_with_amr:BuildRequires: amrnb-devel amrwb-devel}
+%{?_with_amr:BuildRequires: amrnb-devel
+BuildRequires:  amrwb-devel}
 BuildRequires:  gtk+-devel
 BuildRequires:  gtk2-devel
 
