@@ -4,7 +4,6 @@
 #        - Submit and import patches upstream.
 #        - Fix unused-direct-shlib-dependency on libgpac
 
-%global osmo          Osmo4
 #global git           20150924
 
 Name:        gpac
@@ -99,10 +98,7 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Static library for gpac.
 
 %prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%autosetup -p1
 rm -r extra_lib/
 # Fix encoding warnings
 cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
@@ -135,7 +131,7 @@ popd
 
 %install
 %{make_install} install-lib
-rm -rf %{buildroot}%{_bindir}/%{osmo}
+rm -rf %{buildroot}%{_bindir}/Osmo4
 
 #Install generated sggen binaries
 #for b in MPEG4 SVG X3D; do
