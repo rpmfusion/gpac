@@ -125,8 +125,8 @@ rm -rf doc/ipmpx_syntax.bt.origine
 #Avoid mess with setup.h
 cp -p config.h include/gpac
 
-make %{?_smp_mflags} all 
-make %{?_smp_mflags} sggen
+%{make_build} all 
+%{make_build} sggen
 
 ## kwizart - build doxygen doc for devel
 pushd doc
@@ -134,7 +134,7 @@ doxygen
 popd
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install install-lib INSTFLAGS="-p"
+%{make_install} install-lib
 rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
 
 #Install generated sggen binaries
