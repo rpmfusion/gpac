@@ -1,5 +1,4 @@
-# Todo:  - Patch-in xulrunner support within configure with pkg-config support.
-#        - Add pkg-config support for libs detection.
+# Todo:  - Add pkg-config support for libs detection.
 #        - Add pkg-config support generated form configure for gpac (same as ffmpeg).
 #        - Make it support swscaler enabled ffmpeg (at least test it - upstream).
 #        - Debug Osmo4 (don't even work).
@@ -8,11 +7,6 @@
 
 %global osmo          Osmo4
 #global git           20150924
-# Mozilla stuff fails. It's completely disabled for now.
-%global mozver        3.0
-%global geckover      2.0.0
-%global xuldir        %{_datadir}/idl/xulrunner-sdk-%{geckover}
-%global xulbindir     %{_libdir}/xulrunner-%{geckover}
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
@@ -57,7 +51,6 @@ BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
 BuildRequires:  wxGTK-devel
 BuildRequires:  xmlrpc-c-devel
-%{?_with_mozilla:BuildRequires: gecko-devel}
 BuildRequires:  doxygen graphviz
 BuildRequires:  desktop-file-utils
 %{?_with_amr:BuildRequires: amrnb-devel
@@ -125,19 +118,6 @@ Osmo4 is an MPEG-4 player with the following features:
   * Frame export to JPG, PNG, BMP.
 }
 
-%{?_with_mozilla:
-%package -n mozilla-%{osmo}
-Summary:  Osmo Media Player plugin for Mozilla compatible web browsers 
-Requires:  %{osmo} = %{version}-%{release}
-#Requires:  firefox >= %{mozver}
-Requires:  %{_libdir}/mozilla
-
-
-%description -n mozilla-%{osmo}
-This package contains the OSMO Media Player plugin for Mozilla compatible
-web browsers.
-}
-
 %prep
 %setup -q
 %if 0%{?fedora} >= 26
@@ -160,41 +140,12 @@ rm -rf doc/ipmpx_syntax.bt.origine
   --X11-path=%{_prefix} \
   --libdir=%{_lib} \
   --disable-oss-audio \
-%{?_with_mozilla:--mozdir=%{_libdir}/mozilla/plugins} \
 %{?_with_amr:--enable-amr} \
   --disable-static \
   --use-js=no
 
 #Avoid mess with setup.h
 cp -p config.h include/gpac
-
-##
-## Osmo-zila plugin.
-##
-%{?_with_mozilla:
-#
-# Rebuild osmozilla.xpt
-pushd applications/osmozilla
-%{xulbindir}/xpidl -m header -I%{xuldir}/stable -I%{xuldir}/unstable nsIOsmozilla.idl
-%{xulbindir}/xpidl -m typelib -I%{xuldir}/stable -I%{xuldir}/unstable nsIOsmozilla.idl
-%{xulbindir}/xpt_link nposmozilla.xpt nsIOsmozilla.xpt
-mv nsIOsmozilla.xpt nsIOsmozilla.xpt_linux
-popd 
-
-## kwizart - osmozilla parallel make fails
-# %{?_smp_mflags}
-#make -C applications/osmozilla   \
-#  OPTFLAGS="%optflags -fPIC -I%{_includedir}/nspr4/"     \
-#  INCLUDES="-I%{_datadir}/idl/firefox-%{mozver}/       \
-#    -I%{_includedir}/firefox-%{mozver}/       \
-#    -I%{_includedir}/firefox-%{mozver}/xpcom    \
-#    -I%{_includedir}/nspr4/ $INCLUDES"       \
-#  XPIDL_INCL="-I%{_datadir}/idl/firefox-%{mozver}/     \
-#    -I%{_includedir}/firefox-%{mozver}/       \
-#    -I%{_includedir}/firefox-%{mozver}/xpcom    \
-#    -I%{_includedir}/nspr4/ $INCLUDES"       \
-#  install
-}
 
 make %{?_smp_mflags} all 
 make %{?_smp_mflags} sggen
@@ -206,13 +157,6 @@ popd
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install install-lib INSTFLAGS="-p"
-
-%{?_with_mozilla:
-## kwizart - Install osmozilla plugin - make instmoz disabled.
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/mozilla/{plugins,components}
-install -m 755 bin/gcc/nposmozilla.so $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/nposmozilla.so
-install -m 755 bin/gcc/nposmozilla.xpt $RPM_BUILD_ROOT%{_libdir}/mozilla/components/nposmozilla.xpt
-}
 
 %{?_with_osmo:
 # Desktop menu Osmo4
@@ -292,12 +236,6 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 %{_bindir}/Osmo4
 %{_datadir}/applications/*.desktop
 %{_datadir}/pixmaps/%{osmo}.xpm
-}
-
-%{?_with_mozilla:
-%files -n mozilla-%{osmo}
-%{_libdir}/mozilla/plugins/nposmozilla.so
-%{_libdir}/mozilla/components/nposmozilla.xpt
 }
 
 %files doc
