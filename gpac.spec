@@ -19,7 +19,6 @@ Summary:     MPEG-4 multimedia framework
 Version:     0.7.1
 Release:     6%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
-Group:       System Environment/Libraries
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
 # https://github.com/openssl/openssl/issues/1543
@@ -76,7 +75,6 @@ for MP4 and 3GPP(2) files and many tools for scene descriptions
 
 %package        libs
 Summary:        Library for %{name}
-Group:          System Environment/Libraries
 
 %description    libs
 The %{name}-libs package contains library for %{name}.
@@ -84,7 +82,6 @@ The %{name}-libs package contains library for %{name}.
 
 %package  devel
 Summary:  Development libraries and files for %{name}
-Group:    Development/Libraries
 Requires: %{name}-libs = %{version}-%{release}
 
 %description  devel
@@ -93,7 +90,6 @@ Development libraries and files for gpac.
 
 %package  doc
 Summary:  Documentation for %{name}
-Group:    Documentation
 
 %description  doc
 Documentation for %{name}.
@@ -101,7 +97,6 @@ Documentation for %{name}.
 
 %package  devel-static
 Summary:  Development libraries and files for %{name}
-Group:    Development/Libraries
 Requires: %{name}-devel = %{version}-%{release}
 
 
@@ -111,7 +106,6 @@ Static library for gpac.
 %{?_with_osmo:
 %package -n  %{osmo}
 Summary:  Media player based on gpac
-Group:    Applications/Multimedia
 
 %description -n %{osmo}
 Osmo4 is an MPEG-4 player with the following features:
@@ -130,8 +124,7 @@ Osmo4 is an MPEG-4 player with the following features:
 
 %{?_with_mozilla:
 %package -n mozilla-%{osmo}
-Summary:  Osmo Media Player plugin for Mozilla compatible web browsers
-Group:    Applications/Multimedia  
+Summary:  Osmo Media Player plugin for Mozilla compatible web browsers 
 Requires:  %{osmo} = %{version}-%{release}
 #Requires:  firefox >= %{mozver}
 Requires:  %{_libdir}/mozilla
