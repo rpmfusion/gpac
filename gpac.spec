@@ -82,7 +82,7 @@ The %{name}-libs package contains library for %{name}.
 
 %package  devel
 Summary:  Development libraries and files for %{name}
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description  devel
 Development libraries and files for gpac.
@@ -97,7 +97,7 @@ Documentation for %{name}.
 
 %package  devel-static
 Summary:  Development libraries and files for %{name}
-Requires: %{name}-devel = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 
 %description  devel-static
