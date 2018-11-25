@@ -1,7 +1,6 @@
 # Todo:  - Add pkg-config support for libs detection.
 #        - Add pkg-config support generated form configure for gpac (same as ffmpeg).
 #        - Make it support swscaler enabled ffmpeg (at least test it - upstream).
-#        - Debug Osmo4 (don't even work).
 #        - Submit and import patches upstream.
 #        - Fix unused-direct-shlib-dependency on libgpac
 
@@ -99,25 +98,6 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 %description  devel-static
 Static library for gpac.
 
-%{?_with_osmo:
-%package -n  %{osmo}
-Summary:  Media player based on gpac
-
-%description -n %{osmo}
-Osmo4 is an MPEG-4 player with the following features:
-* MPEG-4 Systems player
-* Optimized 2D graphics renderer compliant with the Complete2D Scene Graph
-  and Graphics profiles
-* Video and audio presentation achieved through plugins
-* Multimedia player features:
-  * Timeline controls: play, pause, step.
-  * Graphics features: antialising, zoom and pan, scalable resizing of
-    rendering area, basic full screen support.
-  * Support for Advanced Text and Graphics extension of MPEG-4 Systems
-    under standardization.
-  * Frame export to JPG, PNG, BMP.
-}
-
 %prep
 %setup -q
 %if 0%{?fedora} >= 26
@@ -157,35 +137,7 @@ popd
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install install-lib INSTFLAGS="-p"
-
-%{?_with_osmo:
-# Desktop menu Osmo4
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-cat > %{osmo}.desktop <<EOF
-[Desktop Entry]
-Name=Osmo4 Media Player
-GenericName=Media Player
-Comment=MPEG-4 Media Player
-Exec=%{osmo}
-Terminal=false
-Icon=%{osmo}
-Type=Application
-Encoding=UTF-8
-Categories=AudioVideo;Player;
-EOF
-
-desktop-file-install --vendor "" \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-  --mode 644 \
-  %{osmo}.desktop
-
-#icons
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps
-install -pm 0644 applications/osmo4_wx/osmo4.xpm $RPM_BUILD_ROOT%{_datadir}/pixmaps/%{osmo}.xpm
-}
-%{?!_with_osmo:
 rm -rf $RPM_BUILD_ROOT%{_bindir}/%{osmo}
-}
 
 #Install generated sggen binaries
 #for b in MPEG4 SVG X3D; do
@@ -228,15 +180,6 @@ rm $RPM_BUILD_ROOT%{_includedir}/gpac/config.h
 %files libs
 %{_libdir}/libgpac.so.*
 %{_libdir}/gpac/
-
-%{?_with_osmo:
-%files -n %{osmo}
-%doc AUTHORS BUGS README TODO
-%lincense COPYING
-%{_bindir}/Osmo4
-%{_datadir}/applications/*.desktop
-%{_datadir}/pixmaps/%{osmo}.xpm
-}
 
 %files doc
 %doc doc/html-libgpac/*
