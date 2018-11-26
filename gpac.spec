@@ -89,12 +89,13 @@ Summary:  Documentation for %{name}
 Documentation for %{name}.
 
 
-%package  devel-static
+%package  static
 Summary:  Development libraries and files for %{name}
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Obsoletes: %{name}-devel-static < %{version}-%{release}
+Provides:  %{name}-devel-static = %{version}-%{release}
 
-
-%description  devel-static
+%description  static
 Static library for gpac.
 
 %prep
@@ -180,7 +181,7 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 %{_includedir}/gpac/
 %{_libdir}/libgpac.so
 
-%files devel-static
+%files static
 %{_libdir}/libgpac_static.a
 
 
