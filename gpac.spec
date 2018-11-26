@@ -9,7 +9,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.7.1
-Release:     7%{?git:.%{git}git}%{?dist}
+Release:     8%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -186,6 +186,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Mon Nov 26 2018 Leigh Scott <leigh123linux@googlemail.com> - 0.7.1-8
+- Rename static sub-package
+
 * Sun Nov 25 2018 Leigh Scott <leigh123linux@googlemail.com> - 0.7.1-7
 - Remove Group tag
 - Add missing isa on Requires
