@@ -47,7 +47,7 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
-BuildRequires:  wxGTK-devel
+BuildRequires:  wxGTK3-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen graphviz
 BuildRequires:  gcc
