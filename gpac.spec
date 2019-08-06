@@ -9,7 +9,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.7.1
-Release:     10%{?git:.%{git}git}%{?dist}
+Release:     11%{?git:.%{git}git}%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -186,6 +186,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Tue Aug 06 2019 Leigh Scott <leigh123linux@gmail.com> - 0.7.1-11
+- Rebuild for new ffmpeg version
+
 * Tue Mar 12 2019 Leigh Scott <leigh123linux@googlemail.com> - 0.7.1-10
 - Mass rebuild for x264
 
