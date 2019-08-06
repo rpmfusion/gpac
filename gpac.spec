@@ -8,18 +8,11 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.7.1
-Release:     11%{?git:.%{git}git}%{?dist}
+Version:     0.8.0
+Release:     1%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
-# https://github.com/openssl/openssl/issues/1543
-# Simply remove the call to SSLeay_add_all_algorithms, the addition is now done automatically and internally in libssl.
-Patch0:      openssl-1.1.0.patch
-# Upstream commit, fix typo
-Patch1:      https://github.com/gpac/gpac/commit/669258a21dcc9827e1496c460af0bff83aa5d654.patch#/fix_typo.patch
-# Build fix for ffmpeg-3.5
-Patch2:      ffmpeg35_buildfix.patch
 #Source9:     gpac-snapshot.sh
 
 BuildRequires:  ImageMagick
@@ -152,6 +145,8 @@ touch -r Changelog %{buildroot}%{_includedir}/gpac/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/internal/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/modules/*.h
 rm %{buildroot}%{_includedir}/gpac/config.h
+rm %{buildroot}%{_includedir}/win32/*
+rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %ldconfig_scriptlets libs
@@ -186,6 +181,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Tue Aug 06 2019 Sérgio Basto <sergio@serjux.com> - 0.8.0-1
+- Update GPAC to 0.8.0
+
 * Tue Aug 06 2019 Leigh Scott <leigh123linux@gmail.com> - 0.7.1-11
 - Rebuild for new ffmpeg version
 
