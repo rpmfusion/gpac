@@ -13,10 +13,8 @@ Release:     1%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
-#Source9:     gpac-snapshot.sh
 
-BuildRequires:  ImageMagick
-BuildRequires:  SDL-devel
+BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  librsvg2-devel >= 2.5.0
 BuildRequires:  libGLU-devel
@@ -30,7 +28,6 @@ BuildRequires:  xvidcore-devel >= 1.0.0
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
-BuildRequires:  openjpeg-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libogg-devel
@@ -39,14 +36,11 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
-BuildRequires:  wxGTK3-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen graphviz
 BuildRequires:  gcc
 %{?_with_amr:BuildRequires: amrnb-devel
 BuildRequires:  amrwb-devel}
-BuildRequires:  gtk+-devel
-BuildRequires:  gtk2-devel
 
 %description
 GPAC is a multimedia framework based on the MPEG-4 Systems standard developed
