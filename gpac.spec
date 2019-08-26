@@ -28,7 +28,6 @@ BuildRequires:  libpng-devel >= 1.2.5
 BuildRequires:  libmad-devel
 BuildRequires:  xvidcore-devel >= 1.0.0
 BuildRequires:  ffmpeg-devel
-BuildRequires:  js-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
 BuildRequires:  openjpeg-devel
