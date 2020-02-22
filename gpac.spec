@@ -9,7 +9,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.8.0
-Release:     3%{?dist}
+Release:     4%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -174,6 +174,9 @@ rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %changelog
+* Sat Feb 22 2020 Leigh Scott <leigh123linux@googlemail.com> - 0.8.0-4
+- Rebuild for ffmpeg-4.3 git
+
 * Tue Feb 04 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 0.8.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
