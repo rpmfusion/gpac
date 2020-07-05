@@ -8,12 +8,16 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     0.8.0
-Release:     5%{?dist}
+Version:     1.0.0
+Release:     1%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
-
+#Source9:     gpac-snapshot.sh
+#Debian dependencies provide by gpac
+#Build-Depends: debhelper (>= 6), libc6, libc6-dev, libx11-dev (>= 1.3), zlib1g-dev (>= 1), libfreetype6-dev, libjpeg62-dev | libjpeg62-turbo-dev, libpng-dev, libmad0-dev, libfaad-dev, libogg-dev, libvorbis-dev, libtheora-dev, liba52-dev | liba52-0.7.4-dev, libavcodec-dev, libavformat-dev, libavutil-dev, libswscale-dev, libavdevice-dev, libavfilter-dev, libxv-dev, x11proto-video-dev, libgl1-mesa-dev, x11proto-gl-dev, libxvidcore-dev, libssl-dev (>= 0.9.8), libjack-dev (>= 0.118), libasound2-dev (>= 1.0), libpulse-dev (>= 0.9), libsdl-dev (>= 1.2) | libsdl2-dev, ccache
+#BuildRequires:  ImageMagick
+#BuildRequires:  SDL-devel
 BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  librsvg2-devel >= 2.5.0
@@ -28,6 +32,7 @@ BuildRequires:  xvidcore-devel >= 1.0.0
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
+BuildRequires:  openjpeg-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libogg-devel
@@ -36,9 +41,11 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
+BuildRequires:  jack-audio-connection-kit-devel
+BuildRequires:  libfreenect-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen graphviz
-BuildRequires:  gcc
+BuildRequires:  gcc-c++
 %{?_with_amr:BuildRequires: amrnb-devel
 BuildRequires:  amrwb-devel}
 
@@ -87,11 +94,14 @@ Static library for gpac.
 %prep
 %autosetup -p1
 rm -r extra_lib/
+pushd share/doc
 # Fix encoding warnings
-cp -p doc/ipmpx_syntax.bt doc/ipmpx_syntax.bt.origine
-iconv -f ISO-8859-1 -t UTF8 doc/ipmpx_syntax.bt.origine >  doc/ipmpx_syntax.bt
-touch -r doc/ipmpx_syntax.bt.origine doc/ipmpx_syntax.bt
-rm -rf doc/ipmpx_syntax.bt.origine
+cp -p ipmpx_syntax.bt ipmpx_syntax.bt.origine
+iconv -f ISO-8859-1 -t UTF8 ipmpx_syntax.bt.origine >  ipmpx_syntax.bt
+touch -r ipmpx_syntax.bt.origine ipmpx_syntax.bt
+rm -rf share/doc/ipmpx_syntax.bt.origine
+popd
+sed -i 's/dh_link/ln -s -r/' Makefile
 
 
 %build
@@ -112,7 +122,7 @@ cp -p config.h include/gpac
 %{make_build} sggen
 
 ## kwizart - build doxygen doc for devel
-pushd doc
+pushd share/doc
 doxygen
 popd
 
@@ -129,7 +139,7 @@ for b in MPEG4 X3D; do
 done
 
 #Fix doxygen timestamp
-touch -r Changelog doc/html-libgpac/*
+touch -r Changelog share/doc/html-libgpac/*
 
 #config.h like but not only
 #Usual multilib bug https://bugzilla.rpmfusion.org/show_bug.cgi?id=270
@@ -145,10 +155,11 @@ rm %{buildroot}%{_includedir}/wince/errno.h
 %ldconfig_scriptlets libs
 
 %files
-%doc AUTHORS BUGS Changelog README.md TODO
+%doc Changelog README.md
 %license COPYING
-%{_bindir}/DashCast
-%{_bindir}/MP42TS
+%{_bindir}/gpac
+#{_bindir}/DashCast
+#{_bindir}/MP42TS
 %{_bindir}/MP4Box
 %{_bindir}/MP4Client
 %{_bindir}/MPEG4Gen
@@ -156,16 +167,18 @@ rm %{buildroot}%{_includedir}/wince/errno.h
 %{_bindir}/X3DGen
 %{_datadir}/gpac/
 %{_mandir}/man1/*.1.*
+%{_datadir}/applications/*.desktop
+%{_datadir}/pixmaps/*.png
 
 %files libs
 %{_libdir}/libgpac.so.*
 %{_libdir}/gpac/
 
 %files doc
-%doc doc/html-libgpac/*
+%doc share/doc/html-libgpac/*
 
 %files devel
-%doc doc/CODING_STYLE doc/ipmpx_syntax.bt
+%doc share/doc/CODING_STYLE share/doc/ipmpx_syntax.bt
 %{_includedir}/gpac/
 %{_libdir}/libgpac.so
 
@@ -174,6 +187,12 @@ rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %changelog
+* Fri Jul 03 2020 Sérgio Basto <sergio@serjux.com> - 1.0.0-1
+- Update to 1.0.0
+- BR SDL2-devel instead SDL-devel
+- Add BR jack-audio-connection-kit-devel and libfreenect-devel
+- Remove BR js-devel, wxGTK3-devel, gtk+-devel and gtk2-devel
+
 * Thu Mar 12 2020 Leigh Scott <leigh123linux@gmail.com> - 0.8.0-5
 - Rebuilt for i686
 
