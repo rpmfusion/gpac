@@ -32,7 +32,7 @@ BuildRequires:  xvidcore-devel >= 1.0.0
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  openssl-devel
-BuildRequires:  openjpeg-devel
+BuildRequires:  openjpeg2-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libogg-devel
