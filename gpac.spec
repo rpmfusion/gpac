@@ -9,7 +9,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     1.0.0
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -190,6 +190,9 @@ rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %changelog
+* Mon Jul 06 2020 Nicolas Chauvet <kwizart@gmail.com> - 1.0.0-2
+- Adjust BR
+
 * Fri Jul 03 2020 Sérgio Basto <sergio@serjux.com> - 1.0.0-1
 - Update to 1.0.0
 - BR SDL2-devel instead SDL-devel
