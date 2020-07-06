@@ -42,7 +42,10 @@ BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
 BuildRequires:  jack-audio-connection-kit-devel
+# Disable optional freenect for i686 multilibs gpac usage
+%ifnarch i686
 BuildRequires:  libfreenect-devel
+%endif
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen graphviz
 BuildRequires:  gcc-c++
