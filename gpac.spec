@@ -116,7 +116,8 @@ sed -i 's/dh_link/ln -s -r/' Makefile
   --disable-oss-audio \
 %{?_with_amr:--enable-amr} \
   --disable-static \
-  --use-js=no
+  --use-js=no \
+  --verbose
 
 #Avoid mess with setup.h
 cp -p config.h include/gpac
