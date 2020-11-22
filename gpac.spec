@@ -8,8 +8,8 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     1.0.0
-Release:     3%{?dist}
+Version:     1.0.1
+Release:     1%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -152,8 +152,8 @@ touch -r Changelog %{buildroot}%{_includedir}/gpac/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/internal/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/modules/*.h
 rm %{buildroot}%{_includedir}/gpac/config.h
-rm %{buildroot}%{_includedir}/win32/*
-rm %{buildroot}%{_includedir}/wince/errno.h
+#rm %{buildroot}%{_includedir}/win32/*
+#rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %ldconfig_scriptlets libs
@@ -185,12 +185,16 @@ rm %{buildroot}%{_includedir}/wince/errno.h
 %doc share/doc/CODING_STYLE share/doc/ipmpx_syntax.bt
 %{_includedir}/gpac/
 %{_libdir}/libgpac.so
+%{_libdir}/pkgconfig/gpac.pc
 
 %files static
 %{_libdir}/libgpac_static.a
 
 
 %changelog
+* Sun Nov 22 2020 Sérgio Basto <sergio@serjux.com> - 1.0.1-1
+- Update to 1.0.1
+
 * Mon Aug 17 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
