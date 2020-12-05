@@ -9,7 +9,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     1.0.1
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -49,8 +49,8 @@ BuildRequires:  libfreenect-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen graphviz
 BuildRequires:  gcc-c++
-%{?_with_amr:BuildRequires: amrnb-devel
-BuildRequires:  amrwb-devel}
+%{?_with_amr:BuildRequires: amrnb-devel}
+%{?_with_amr:BuildRequires:  amrwb-devel}
 
 %description
 GPAC is a multimedia framework based on the MPEG-4 Systems standard developed
@@ -192,6 +192,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Sat Dec 5 2020 Lucas Bickel <hairmare@rabe.ch> - 1.0.1-2
+- Enable SRPM rebuilds on open build service
+
 * Sun Nov 22 2020 Sérgio Basto <sergio@serjux.com> - 1.0.1-1
 - Update to 1.0.1
 
