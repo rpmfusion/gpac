@@ -9,7 +9,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     1.0.1
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -192,6 +192,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Fri Jan  1 2021 Leigh Scott <leigh123linux@gmail.com> - 1.0.1-2
+- Rebuilt for new ffmpeg snapshot
+
 * Sun Nov 22 2020 Sérgio Basto <sergio@serjux.com> - 1.0.1-1
 - Update to 1.0.1
 
