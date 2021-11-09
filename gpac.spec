@@ -5,14 +5,18 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 #global git           20150924
+%global commit  413cd94f24ebf09668cc90434af81729a01e6306
+%global date 20211104
+%global shortcommit0 %(c=%{commit}; echo ${c:0:7})
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     1.0.1
-Release:     5%{?dist}
+Version:     1.0.2
+Release:     0.1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
-Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
+#Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
+Source0:     https://github.com/gpac/gpac/archive/%{commit}/gpac-%{commit}.tar.gz
 #Source9:     gpac-snapshot.sh
 #Debian dependencies provide by gpac
 #Build-Depends: debhelper (>= 6), libc6, libc6-dev, libx11-dev (>= 1.3), zlib1g-dev (>= 1), libfreetype6-dev, libjpeg62-dev | libjpeg62-turbo-dev, libpng-dev, libmad0-dev, libfaad-dev, libogg-dev, libvorbis-dev, libtheora-dev, liba52-dev | liba52-0.7.4-dev, libavcodec-dev, libavformat-dev, libavutil-dev, libswscale-dev, libavdevice-dev, libavfilter-dev, libxv-dev, x11proto-video-dev, libgl1-mesa-dev, x11proto-gl-dev, libxvidcore-dev, libssl-dev (>= 0.9.8), libjack-dev (>= 0.118), libasound2-dev (>= 1.0), libpulse-dev (>= 0.9), libsdl-dev (>= 1.2) | libsdl2-dev, ccache
@@ -95,7 +99,7 @@ Provides:  %{name}-devel-static = %{version}-%{release}
 Static library for gpac.
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n %{name}-%{commit}
 rm -r extra_lib/
 pushd share/doc
 # Fix encoding warnings
@@ -192,6 +196,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Tue Nov 09 2021 Leigh Scott <leigh123linux@gmail.com> - 1.0.2-0.1.20211104git413cd94
+- Use git snapshot
+
 * Tue Nov 09 2021 Leigh Scott <leigh123linux@gmail.com> - 1.0.1-5
 - Rebuilt for new ffmpeg snapshot
 
