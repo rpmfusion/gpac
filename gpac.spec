@@ -176,7 +176,6 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 %{_datadir}/gpac/
 %{_mandir}/man1/*.1.*
 %{_datadir}/applications/*.desktop
-%{_datadir}/pixmaps/*.png
 
 %files libs
 %{_libdir}/libgpac.so.*
