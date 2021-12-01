@@ -9,7 +9,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     0.8.0
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -174,6 +174,9 @@ rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %changelog
+* Wed Dec 01 2021 Nicolas Chauvet <kwizart@gmail.com> - 0.8.0-2
+- Rebuilt
+
 * Tue Aug 06 2019 Sérgio Basto <sergio@serjux.com> - 0.8.0-1
 - Update GPAC to 0.8.0
 
