@@ -57,8 +57,8 @@ BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen
 BuildRequires:  graphviz
 BuildRequires:  gcc-c++
-%{?_with_amr:BuildRequires: amrnb-devel
-BuildRequires:  amrwb-devel}
+%{?_with_amr:BuildRequires: amrnb-devel}
+%{?_with_amr:BuildRequires: amrwb-devel}
 
 %description
 GPAC is a multimedia framework based on the MPEG-4 Systems standard developed
