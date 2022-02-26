@@ -5,18 +5,23 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 #global git           20150924
-%global commit  413cd94f24ebf09668cc90434af81729a01e6306
-%global date 20211104
-%global shortcommit0 %(c=%{commit}; echo ${c:0:7})
+#global commit  413cd94f24ebf09668cc90434af81729a01e6306
+#global date 20211104
+#global shortcommit0 %(c=%{commit}; echo ${c:0:7})
+
+%if 0%{?el9}
+%global _without_jack 1
+%global _without_freenect 1
+%endif
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     1.0.2
-Release:     0.2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Version:     2.0.0
+Release:     1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
-#Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
-Source0:     https://github.com/gpac/gpac/archive/%{commit}/gpac-%{commit}.tar.gz
+Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
+#Source0:     https://github.com/gpac/gpac/archive/%{commit}/gpac-%{commit}.tar.gz
 #Source9:     gpac-snapshot.sh
 #Debian dependencies provide by gpac
 #Build-Depends: debhelper (>= 6), libc6, libc6-dev, libx11-dev (>= 1.3), zlib1g-dev (>= 1), libfreetype6-dev, libjpeg62-dev | libjpeg62-turbo-dev, libpng-dev, libmad0-dev, libfaad-dev, libogg-dev, libvorbis-dev, libtheora-dev, liba52-dev | liba52-0.7.4-dev, libavcodec-dev, libavformat-dev, libavutil-dev, libswscale-dev, libavdevice-dev, libavfilter-dev, libxv-dev, x11proto-video-dev, libgl1-mesa-dev, x11proto-gl-dev, libxvidcore-dev, libssl-dev (>= 0.9.8), libjack-dev (>= 0.118), libasound2-dev (>= 1.0), libpulse-dev (>= 0.9), libsdl-dev (>= 1.2) | libsdl2-dev, ccache
@@ -26,7 +31,6 @@ BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  librsvg2-devel >= 2.5.0
 BuildRequires:  libGLU-devel
-BuildRequires:  freeglut-devel
 BuildRequires:  freetype-devel >= 2.1.4
 BuildRequires:  faad2-devel
 BuildRequires:  libjpeg-devel
@@ -45,10 +49,10 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
-BuildRequires:  jack-audio-connection-kit-devel
+%{!?_without_jack:BuildRequires:  jack-audio-connection-kit-devel}
 # Disable optional freenect for i686 multilibs gpac usage
 %ifnarch i686
-BuildRequires:  libfreenect-devel
+%{!?_without_freenect:BuildRequires:  libfreenect-devel}
 %endif
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen graphviz
@@ -99,7 +103,7 @@ Provides:  %{name}-devel-static = %{version}-%{release}
 Static library for gpac.
 
 %prep
-%autosetup -p1 -n %{name}-%{commit}
+%autosetup -p1
 rm -r extra_lib/
 pushd share/doc
 # Fix encoding warnings
@@ -196,6 +200,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Sat Feb 26 2022 Leigh Scott <leigh123linux@gmail.com> - 2.0.0-1
+- Update to 2.0.0
+
 * Wed Feb 09 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.0.2-0.2.20211104git413cd94
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
