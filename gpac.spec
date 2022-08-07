@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     2.0.0
-Release:     1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:     2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:     LGPLv2+
 URL:         http://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -200,6 +200,10 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.0.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
+  5.1
+
 * Sat Feb 26 2022 Leigh Scott <leigh123linux@gmail.com> - 2.0.0-1
 - Update to 2.0.0
 
