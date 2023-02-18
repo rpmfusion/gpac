@@ -16,17 +16,15 @@
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     2.0.0
-Release:     2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Version:     2.2.0
+Release:     1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:     LGPLv2+
-URL:         http://gpac.sourceforge.net/
+URL:         https://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
 #Source0:     https://github.com/gpac/gpac/archive/%{commit}/gpac-%{commit}.tar.gz
-#Source9:     gpac-snapshot.sh
-#Debian dependencies provide by gpac
-#Build-Depends: debhelper (>= 6), libc6, libc6-dev, libx11-dev (>= 1.3), zlib1g-dev (>= 1), libfreetype6-dev, libjpeg62-dev | libjpeg62-turbo-dev, libpng-dev, libmad0-dev, libfaad-dev, libogg-dev, libvorbis-dev, libtheora-dev, liba52-dev | liba52-0.7.4-dev, libavcodec-dev, libavformat-dev, libavutil-dev, libswscale-dev, libavdevice-dev, libavfilter-dev, libxv-dev, x11proto-video-dev, libgl1-mesa-dev, x11proto-gl-dev, libxvidcore-dev, libssl-dev (>= 0.9.8), libjack-dev (>= 0.118), libasound2-dev (>= 1.0), libpulse-dev (>= 0.9), libsdl-dev (>= 1.2) | libsdl2-dev, ccache
-#BuildRequires:  ImageMagick
-#BuildRequires:  SDL-devel
+
+Patch0:      gpac-doxygen_195.patch
+
 BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  librsvg2-devel >= 2.5.0
@@ -55,7 +53,8 @@ BuildRequires:  libXv-devel
 %{!?_without_freenect:BuildRequires:  libfreenect-devel}
 %endif
 BuildRequires:  xmlrpc-c-devel
-BuildRequires:  doxygen graphviz
+BuildRequires:  doxygen
+BuildRequires:  graphviz
 BuildRequires:  gcc-c++
 %{?_with_amr:BuildRequires: amrnb-devel
 BuildRequires:  amrwb-devel}
@@ -112,19 +111,19 @@ iconv -f ISO-8859-1 -t UTF8 ipmpx_syntax.bt.origine >  ipmpx_syntax.bt
 touch -r ipmpx_syntax.bt.origine ipmpx_syntax.bt
 rm -rf share/doc/ipmpx_syntax.bt.origine
 popd
+sed -i 's/-O0 $CFLAGS/$CFLAGS/' configure
+sed -i 's/-O3 $CFLAGS/$CFLAGS/' configure
 sed -i 's/dh_link/ln -s -r/' Makefile
 
 
 %build
 %configure \
-  --enable-debug \
-  --extra-cflags="%{optflags} -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 $(pkg-config --cflags libavformat)" \
+  --extra-cflags="%{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 $(pkg-config --cflags libavformat)" \
   --X11-path=%{_prefix} \
   --libdir=%{_lib} \
   --disable-oss-audio \
 %{?_with_amr:--enable-amr} \
-  --disable-static \
-  --use-js=no \
+  --enable-pic \
   --verbose
 
 #Avoid mess with setup.h
@@ -160,8 +159,6 @@ touch -r Changelog %{buildroot}%{_includedir}/gpac/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/internal/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/modules/*.h
 rm %{buildroot}%{_includedir}/gpac/config.h
-#rm %{buildroot}%{_includedir}/win32/*
-#rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %ldconfig_scriptlets libs
@@ -170,12 +167,8 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 %doc Changelog README.md
 %license COPYING
 %{_bindir}/gpac
-#{_bindir}/DashCast
-#{_bindir}/MP42TS
 %{_bindir}/MP4Box
-%{_bindir}/MP4Client
 %{_bindir}/MPEG4Gen
-#{_bindir}/SVGGen
 %{_bindir}/X3DGen
 %{_datadir}/gpac/
 %{_mandir}/man1/*.1.*
@@ -200,6 +193,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Sat Feb 18 2023 Leigh Scott <leigh123linux@gmail.com> - 2.2.0-1
+- Update to 2.2.0
+
 * Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.0.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1
