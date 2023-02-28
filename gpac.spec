@@ -25,7 +25,6 @@ Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.ta
 
 Patch0:      gpac-doxygen_195.patch
 Patch1:      Revert-revert-ffmx-gfio.patch
-Patch2:      ffmpeg6.patch
 
 BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
