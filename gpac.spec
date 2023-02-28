@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     2.2.0
-Release:     1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:     2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:     LGPLv2+
 URL:         https://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -193,6 +193,9 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Tue Feb 28 2023 Leigh Scott <leigh123linux@gmail.com> - 2.2.0-2
+- Rebuilt for new ffmpeg
+
 * Sat Feb 18 2023 Leigh Scott <leigh123linux@gmail.com> - 2.2.0-1
 - Update to 2.2.0
 
