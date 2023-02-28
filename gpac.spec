@@ -24,7 +24,6 @@ Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.ta
 #Source0:     https://github.com/gpac/gpac/archive/%{commit}/gpac-%{commit}.tar.gz
 
 Patch0:      gpac-doxygen_195.patch
-Patch1:      Revert-revert-ffmx-gfio.patch
 
 BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
