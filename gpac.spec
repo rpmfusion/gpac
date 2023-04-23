@@ -5,24 +5,31 @@
 #        - Fix unused-direct-shlib-dependency on libgpac
 
 #global git           20150924
+#global commit  413cd94f24ebf09668cc90434af81729a01e6306
+#global date 20211104
+#global shortcommit0 %(c=%{commit}; echo ${c:0:7})
+
+%if 0%{?el9}
+%global _without_jack 1
+%global _without_freenect 1
+%endif
 
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
-Version:     1.0.1
-Release:     2%{?dist}
+Version:     2.2.0
+Release:     3%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:     LGPLv2+
-URL:         http://gpac.sourceforge.net/
+URL:         https://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
-#Source9:     gpac-snapshot.sh
-#Debian dependencies provide by gpac
-#Build-Depends: debhelper (>= 6), libc6, libc6-dev, libx11-dev (>= 1.3), zlib1g-dev (>= 1), libfreetype6-dev, libjpeg62-dev | libjpeg62-turbo-dev, libpng-dev, libmad0-dev, libfaad-dev, libogg-dev, libvorbis-dev, libtheora-dev, liba52-dev | liba52-0.7.4-dev, libavcodec-dev, libavformat-dev, libavutil-dev, libswscale-dev, libavdevice-dev, libavfilter-dev, libxv-dev, x11proto-video-dev, libgl1-mesa-dev, x11proto-gl-dev, libxvidcore-dev, libssl-dev (>= 0.9.8), libjack-dev (>= 0.118), libasound2-dev (>= 1.0), libpulse-dev (>= 0.9), libsdl-dev (>= 1.2) | libsdl2-dev, ccache
-#BuildRequires:  ImageMagick
-#BuildRequires:  SDL-devel
+#Source0:     https://github.com/gpac/gpac/archive/%{commit}/gpac-%{commit}.tar.gz
+
+Patch0:      gpac-doxygen_195.patch
+Patch1:      https://github.com/gpac/gpac/commit/ba14e34dd7a3c4cef5a56962898e9f863dd4b4f3.patch#/ffmpeg6.patch
+
 BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
 BuildRequires:  librsvg2-devel >= 2.5.0
 BuildRequires:  libGLU-devel
-BuildRequires:  freeglut-devel
 BuildRequires:  freetype-devel >= 2.1.4
 BuildRequires:  faad2-devel
 BuildRequires:  libjpeg-devel
@@ -41,13 +48,14 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXv-devel
-BuildRequires:  jack-audio-connection-kit-devel
+%{!?_without_jack:BuildRequires:  jack-audio-connection-kit-devel}
 # Disable optional freenect for i686 multilibs gpac usage
 %ifnarch i686
-BuildRequires:  libfreenect-devel
+%{!?_without_freenect:BuildRequires:  libfreenect-devel}
 %endif
 BuildRequires:  xmlrpc-c-devel
-BuildRequires:  doxygen graphviz
+BuildRequires:  doxygen
+BuildRequires:  graphviz
 BuildRequires:  gcc-c++
 %{?_with_amr:BuildRequires: amrnb-devel}
 %{?_with_amr:BuildRequires:  amrwb-devel}
@@ -104,19 +112,19 @@ iconv -f ISO-8859-1 -t UTF8 ipmpx_syntax.bt.origine >  ipmpx_syntax.bt
 touch -r ipmpx_syntax.bt.origine ipmpx_syntax.bt
 rm -rf share/doc/ipmpx_syntax.bt.origine
 popd
+sed -i 's/-O0 $CFLAGS/$CFLAGS/' configure
+sed -i 's/-O3 $CFLAGS/$CFLAGS/' configure
 sed -i 's/dh_link/ln -s -r/' Makefile
 
 
 %build
 %configure \
-  --enable-debug \
-  --extra-cflags="%{optflags} -fPIC -DPIC -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 $(pkg-config --cflags libavformat)" \
+  --extra-cflags="%{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 $(pkg-config --cflags libavformat)" \
   --X11-path=%{_prefix} \
   --libdir=%{_lib} \
   --disable-oss-audio \
 %{?_with_amr:--enable-amr} \
-  --disable-static \
-  --use-js=no \
+  --enable-pic \
   --verbose
 
 #Avoid mess with setup.h
@@ -152,8 +160,6 @@ touch -r Changelog %{buildroot}%{_includedir}/gpac/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/internal/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/modules/*.h
 rm %{buildroot}%{_includedir}/gpac/config.h
-#rm %{buildroot}%{_includedir}/win32/*
-#rm %{buildroot}%{_includedir}/wince/errno.h
 
 
 %ldconfig_scriptlets libs
@@ -162,17 +168,13 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 %doc Changelog README.md
 %license COPYING
 %{_bindir}/gpac
-#{_bindir}/DashCast
-#{_bindir}/MP42TS
 %{_bindir}/MP4Box
-%{_bindir}/MP4Client
 %{_bindir}/MPEG4Gen
-#{_bindir}/SVGGen
 %{_bindir}/X3DGen
 %{_datadir}/gpac/
 %{_mandir}/man1/*.1.*
 %{_datadir}/applications/*.desktop
-%{_datadir}/pixmaps/*.png
+%{_datadir}/icons/hicolor/*/apps/gpac.png
 
 %files libs
 %{_libdir}/libgpac.so.*
@@ -192,8 +194,39 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
-* Sat Dec 5 2020 Lucas Bickel <hairmare@rabe.ch> - 1.0.1-2
+* Sat Dec 5 2020 Lucas Bickel <hairmare@rabe.ch> - 2.2.0-3
 - Enable SRPM rebuilds on open build service
+
+* Tue Feb 28 2023 Leigh Scott <leigh123linux@gmail.com> - 2.2.0-2
+- Rebuilt for new ffmpeg
+
+* Sat Feb 18 2023 Leigh Scott <leigh123linux@gmail.com> - 2.2.0-1
+- Update to 2.2.0
+
+* Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.0.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
+  5.1
+
+* Sat Feb 26 2022 Leigh Scott <leigh123linux@gmail.com> - 2.0.0-1
+- Update to 2.0.0
+
+* Wed Feb 09 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.0.2-0.2.20211104git413cd94
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
+* Tue Nov 09 2021 Leigh Scott <leigh123linux@gmail.com> - 1.0.2-0.1.20211104git413cd94
+- Use git snapshot
+
+* Tue Nov 09 2021 Leigh Scott <leigh123linux@gmail.com> - 1.0.1-5
+- Rebuilt for new ffmpeg snapshot
+
+* Mon Aug 02 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
+* Wed Feb 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
+* Fri Jan  1 2021 Leigh Scott <leigh123linux@gmail.com> - 1.0.1-2
+- Rebuilt for new ffmpeg snapshot
 
 * Sun Nov 22 2020 Sérgio Basto <sergio@serjux.com> - 1.0.1-1
 - Update to 1.0.1
