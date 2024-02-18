@@ -125,7 +125,10 @@ sed -i 's/dh_link/ln -s -r/' Makefile
   --disable-oss-audio \
 %{?_with_amr:--enable-amr} \
   --enable-pic \
-  --verbose
+%if 0%{?fedora} && 0%{?fedora} >= 40
+  --use-zlib=no \
+%endif
+  --verbose 
 
 #Avoid mess with setup.h
 cp -p config.h include/gpac
