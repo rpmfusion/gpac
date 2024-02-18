@@ -127,6 +127,9 @@ sed -i 's/dh_link/ln -s -r/' Makefile
   --enable-pic \
 %if 0%{?fedora} && 0%{?fedora} >= 40
   --use-zlib=no \
+%ifarch %{arm64}
+  --disable-nvdec \
+%endif
 %endif
   --verbose 
 
