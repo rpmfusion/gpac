@@ -41,6 +41,7 @@ BuildRequires:  faad2-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  libpng-devel >= 1.2.5
 BuildRequires:  libmad-devel
+BuildRequires:  libnghttp2-devel
 BuildRequires:  xvidcore-devel >= 1.0.0
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libxml2-devel
@@ -205,6 +206,7 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 - fix build with zlib-ng
 - fix building nvdec on aarch64
 - fix OSS audio disablement
+- enable Nghttp2 support
 
 * Sat Feb 03 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.2.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
