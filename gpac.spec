@@ -128,7 +128,7 @@ sed -i 's/dh_link/ln -s -r/' Makefile
   --extra-cflags="%{optflags} -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -D_GNU_SOURCE=1 $(pkg-config --cflags libavformat)" \
   --X11-path=%{_prefix} \
   --libdir=%{_lib} \
-  --disable-oss-audio \
+  --disable-oss \
 %{?_with_amr:--enable-amr} \
   --enable-pic \
   --verbose
@@ -204,6 +204,7 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 - re-enable zlib and nvdec
 - fix build with zlib-ng
 - fix building nvdec on aarch64
+- fix OSS audio disablement
 
 * Sat Feb 03 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.2.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
