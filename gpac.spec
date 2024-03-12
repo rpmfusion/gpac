@@ -111,13 +111,12 @@ Static library for gpac.
 
 %prep
 %autosetup -p1
-rm -r extra_lib/
+rm -rv extra_lib/
 pushd share/doc
 # Fix encoding warnings
-cp -p ipmpx_syntax.bt ipmpx_syntax.bt.origine
-iconv -f ISO-8859-1 -t UTF8 ipmpx_syntax.bt.origine >  ipmpx_syntax.bt
-touch -r ipmpx_syntax.bt.origine ipmpx_syntax.bt
-rm -rf share/doc/ipmpx_syntax.bt.origine
+iconv -f ISO-8859-1 -t UTF8 ipmpx_syntax.bt >  ipmpx_syntax.bt.utf8
+touch -r ipmpx_syntax.bt{,.utf8}
+mv ipmpx_syntax.bt{.utf8,}
 popd
 sed -i 's/-O0 $CFLAGS/$CFLAGS/' configure
 sed -i 's/-O3 $CFLAGS/$CFLAGS/' configure
@@ -137,8 +136,8 @@ sed -i 's/dh_link/ln -s -r/' Makefile
 #Avoid mess with setup.h
 cp -p config.h include/gpac
 
-%{make_build} all 
-%{make_build} sggen
+%make_build all
+%make_build sggen
 
 ## kwizart - build doxygen doc for devel
 pushd share/doc
@@ -146,8 +145,7 @@ doxygen
 popd
 
 %install
-%{make_install} install-lib
-rm -rf %{buildroot}%{_bindir}/Osmo4
+%make_install install-lib
 
 #Install generated sggen binaries
 #for b in MPEG4 SVG X3D; do
@@ -167,9 +165,8 @@ touch -r Changelog %{buildroot}%{_includedir}/gpac/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/internal/*.h
 touch -r Changelog %{buildroot}%{_includedir}/gpac/modules/*.h
 rm %{buildroot}%{_includedir}/gpac/config.h
-
-
-%ldconfig_scriptlets libs
+# do not include in gpac, only here to create doxygen group for doc ordering
+rm %{buildroot}%{_includedir}/gpac/00_doxy.h
 
 %files
 %doc Changelog README.md
@@ -216,6 +213,7 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 - fix OSS audio disablement
 - enable Nghttp2 support
 - list manpages and libraries explicitly
+- clean up, avoid using rm -f
 
 * Sat Feb 03 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.2.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
