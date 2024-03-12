@@ -179,13 +179,21 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 %{_bindir}/MPEG4Gen
 %{_bindir}/X3DGen
 %{_datadir}/gpac/
-%{_mandir}/man1/*.1.*
-%{_datadir}/applications/*.desktop
+%{_mandir}/man1/gpac-filters.1.*
+%{_mandir}/man1/gpac.1.*
+%{_mandir}/man1/mp4box.1.*
+%{_datadir}/applications/gpac.desktop
 %{_datadir}/icons/hicolor/*/apps/gpac.png
 
 %files libs
-%{_libdir}/libgpac.so.*
-%{_libdir}/gpac/
+%{_libdir}/libgpac.so.12{,.*}
+%dir %{_libdir}/gpac
+%{_libdir}/gpac/gm_ft_font.so
+%{_libdir}/gpac/gm_jack.so
+%{_libdir}/gpac/gm_pulseaudio.so
+%{_libdir}/gpac/gm_sdl_out.so
+%{_libdir}/gpac/gm_validator.so
+%{_libdir}/gpac/gm_x11_out.so
 
 %files doc
 %doc share/doc/html-libgpac/*
@@ -207,6 +215,7 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 - fix building nvdec on aarch64
 - fix OSS audio disablement
 - enable Nghttp2 support
+- list manpages and libraries explicitly
 
 * Sat Feb 03 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.2.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
