@@ -17,7 +17,7 @@
 Name:        gpac
 Summary:     MPEG-4 multimedia framework
 Version:     2.2.1
-Release:     5%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:     6%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:     LGPLv2+
 URL:         https://gpac.sourceforge.net/
 Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.tar.gz
@@ -25,6 +25,12 @@ Source0:     https://github.com/gpac/gpac/archive/v%{version}/gpac-%{version}.ta
 
 Patch0:      gpac-doxygen_195.patch
 Patch1:      https://github.com/gpac/gpac/commit/ba14e34dd7a3c4cef5a56962898e9f863dd4b4f3.patch#/ffmpeg6.patch
+# zlib-ng doesn't define the zmemcpy macro anymore
+# https://github.com/gpac/gpac/pull/2780
+Patch2:      gpac-no-zmemcpy.patch
+# cuvid device pointers are 64bit on aarch64 as well
+# https://github.com/gpac/gpac/pull/2781
+Patch3:      gpac-aarch64-nvdec.patch
 
 BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
@@ -125,13 +131,7 @@ sed -i 's/dh_link/ln -s -r/' Makefile
   --disable-oss-audio \
 %{?_with_amr:--enable-amr} \
   --enable-pic \
-%if 0%{?fedora} && 0%{?fedora} >= 40
-  --use-zlib=no \
-%ifarch %{arm64}
-  --disable-nvdec \
-%endif
-%endif
-  --verbose 
+  --verbose
 
 #Avoid mess with setup.h
 cp -p config.h include/gpac
@@ -200,6 +200,11 @@ rm %{buildroot}%{_includedir}/gpac/config.h
 
 
 %changelog
+* Tue Mar 12 2024 Dominik Mierzejewski <dominik@greysector.net> - 2.2.1-6
+- re-enable zlib and nvdec
+- fix build with zlib-ng
+- fix building nvdec on aarch64
+
 * Sat Feb 03 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2.2.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
