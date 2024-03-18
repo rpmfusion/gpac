@@ -1,0 +1,12 @@
+diff -up gpac-2.2.1/configure.orig gpac-2.2.1/configure
+--- gpac-2.2.1/configure.orig	2023-04-24 14:57:53.000000000 +0200
++++ gpac-2.2.1/configure	2024-03-18 22:28:23.019132462 +0100
+@@ -945,7 +945,7 @@ fi
+ 
+ #GCC opt
+ if test "$no_gcc_opt" = "no"; then
+-    CFLAGS="-O3 $CFLAGS"
++    CFLAGS="$CFLAGS"
+ else
+     CFLAGS="-O0 $CFLAGS"
+ fi

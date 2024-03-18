@@ -31,6 +31,8 @@ Patch2:      gpac-no-zmemcpy.patch
 # cuvid device pointers are 64bit on aarch64 as well
 # https://github.com/gpac/gpac/pull/2781
 Patch3:      gpac-aarch64-nvdec.patch
+# drop -O3 from CFLAGS
+Patch4:      gpac-noopt.patch
 
 BuildRequires:  SDL2-devel
 BuildRequires:  a52dec-devel
@@ -116,8 +118,6 @@ iconv -f ISO-8859-1 -t UTF8 ipmpx_syntax.bt >  ipmpx_syntax.bt.utf8
 touch -r ipmpx_syntax.bt{,.utf8}
 mv ipmpx_syntax.bt{.utf8,}
 popd
-sed -i 's/-O0 $CFLAGS/$CFLAGS/' configure
-sed -i 's/-O3 $CFLAGS/$CFLAGS/' configure
 
 
 %build
