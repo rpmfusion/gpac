@@ -118,7 +118,6 @@ mv ipmpx_syntax.bt{.utf8,}
 popd
 sed -i 's/-O0 $CFLAGS/$CFLAGS/' configure
 sed -i 's/-O3 $CFLAGS/$CFLAGS/' configure
-sed -i 's/dh_link/ln -s -r/' Makefile
 
 
 %build
