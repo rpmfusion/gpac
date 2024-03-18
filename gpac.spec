@@ -64,8 +64,6 @@ BuildRequires:  xmlrpc-c-devel
 BuildRequires:  doxygen
 BuildRequires:  graphviz
 BuildRequires:  gcc-c++
-%{?_with_amr:BuildRequires: amrnb-devel}
-%{?_with_amr:BuildRequires: amrwb-devel}
 
 %description
 GPAC is a multimedia framework based on the MPEG-4 Systems standard developed
@@ -129,7 +127,6 @@ sed -i 's/dh_link/ln -s -r/' Makefile
   --X11-path=%{_prefix} \
   --libdir=%{_lib} \
   --disable-oss \
-%{?_with_amr:--enable-amr} \
   --enable-pic \
   --verbose
 
