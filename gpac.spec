@@ -186,7 +186,7 @@ rm %{buildroot}%{_includedir}/gpac/00_doxy.h
 %{_libdir}/libgpac.so.12{,.*}
 %dir %{_libdir}/gpac
 %{_libdir}/gpac/gm_ft_font.so
-%{_libdir}/gpac/gm_jack.so
+%{!?_without_jack:%{_libdir}/gpac/gm_jack.so}
 %{_libdir}/gpac/gm_pulseaudio.so
 %{_libdir}/gpac/gm_sdl_out.so
 %{_libdir}/gpac/gm_validator.so
