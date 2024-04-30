@@ -1,0 +1,13 @@
+--- a/configure	2024-04-17 18:18:21.000000000 +0100
++++ b/configure	2024-04-30 15:47:55.511913634 +0100
+@@ -1632,8 +1632,8 @@ int main( void ) { a52_state_t *codec; a
+ 
+ 
+ 
+-config_package xvid "xvid" "" "-lxvidcore $PTHREAD_LDFLAGS" "" '#include <xvid.h>
+-int main( void ) { void *codec; xvid_decore(codec, XVID_DEC_DESTROY, NULL, NULL); return 0; }'
++config_package xvid "xvid" "" "-lxvidcore -lpthread" "" '#include <xvid.h>
++int main( void ) { return 0; }'
+ 
+ config_package faad "faad2" "" "-lfaad -lm" "" '#include <faad.h>
+ int main( void ) { NeAACDecOpen(); return 0; }'
